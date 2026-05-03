@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+build/
+dist/
+.eggs/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Virtualenvs
+.venv/
+venv/
+env/
+ENV/
+
+# Secrets — never commit; ship .env.example instead
+.env
+.env.*
+!.env.example
+*.env
+!*.env.example
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Tool outputs
+**/tests/golden/_actual_*
+**/tests/_tmp/
+
+# Local dev
+*.log
+.claude-local/

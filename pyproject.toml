@@ -1,0 +1,58 @@
+# Repo-level dev tooling config. This is NOT a Python package; each tool
+# under <tool>/ has (or may have) its own pyproject.toml for PyPI release.
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+# Auto-generated OWUI single-file bundles aren't worth linting — `make check-bundle`
+# already enforces they match `core/`, and the generator emits stylistic patterns
+# we don't care about in dist artifacts. Also exclude legacy main.py files for
+# tools whose refactor wave hasn't landed yet.
+extend-exclude = [
+    "*/owui.py",
+    "askuser/main.py",
+    "currencypulse/main.py",
+    "flighthunter/main.py",
+    "pagesignal/main.py",
+    "signalbrief/main.py",
+    "sitepulse/main.py",
+    "tripweather/main.py",
+    "tubescript/main.py",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "N"]
+ignore = [
+    "E501",
+    "N812",   # `import as Date` / `as ET` conventions are intentional aliases
+    "N818",   # Custom HTTP exceptions (RateLimited, NetworkTimeout) read better without -Error suffix
+    "SIM102", # nested-if collapse — sometimes hurts readability
+    "SIM103", # truthy short-circuit — same reason
+    "SIM110", # any() rewrite suggestion is sometimes worse for clarity
+    "SIM117", # nested-with collapse — readability call
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = ["B011", "SIM117"]
+# Generated bundles are excluded entirely above; belt-and-braces hint.
+"*/owui.py" = ["F811", "F401", "F541", "UP045", "I001", "E", "W", "N"]
+
+[tool.pytest.ini_options]
+testpaths = [
+  "tests",
+  "askuser/tests",
+  "currencypulse/tests",
+  "flighthunter/tests",
+  "pagesignal/tests",
+  "paperforge/tests",
+  "qrforge/tests",
+  "signalbrief/tests",
+  "sitepulse/tests",
+  "tripweather/tests",
+  "tubescript/tests",
+]
+markers = [
+  "live: hits real network. Skipped unless RUN_LIVE=1.",
+]
+addopts = "-ra --strict-markers"
+asyncio_mode = "auto"
