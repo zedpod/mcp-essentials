@@ -37,8 +37,9 @@ class Tools:
     def create_document(
         self,
         title: str,
-        summary: str,
-        sections: list[dict],
+        body: str | None = None,
+        summary: str | None = None,
+        sections: list[dict] | None = None,
         format: str | None = None,
         project: str | None = None,
         decisions: list[dict] | None = None,
@@ -50,20 +51,34 @@ class Tools:
         language: str | None = None,
     ) -> str:
         """
-        Synthesize the conversation into a flowing document and save it.
-        Provide title + 3-5 sentence summary + ordered sections with prose content.
-        Decisions, open_questions, and next_steps make the doc resumable later.
+        Create and save a document file - markdown, HTML, DOCX, or PDF.
 
-        :param title: Scannable, project-style title.
-        :param summary: 3-5 sentence orientation text.
-        :param sections: Ordered list of {heading, content, children?}.
+        Simplest call: `title` plus `body` (one markdown chunk). For richer docs
+        pass structured `sections`, `decisions`, `open_questions`, `next_steps`.
+        Synthesize a real title from the user's request; "Untitled" stubs are refused.
+
+        When to use:
+        - "save this as a doc"     / "bunu doküman yap"
+        - "create a markdown file" / "md dosyası oluştur"
+        - "export to PDF / docx"   / "PDF / docx olarak kaydet"
+        - User wants a downloadable, shareable, or Obsidian-importable file.
+
+        When NOT to use:
+        - User just wants an inline summary in chat
+        - User asks for a QR code, flight search, news brief - those tools save themselves
+
+        :param title: REQUIRED. Synthesize from the request - no "Untitled" stubs.
+        :param body: OPTIONAL. The whole doc body as one markdown string (simplest).
+        :param summary: OPTIONAL. Derived from first section's content if omitted.
+        :param sections: OPTIONAL list of {heading, content, children?} for structured docs.
         :param format: 'md' (default), 'html', 'docx', or 'pdf'.
-        :param decisions: List of {title, chose, why, rejected?, when?}.
+        :param decisions: OPTIONAL list of {title, chose, why, rejected?, when?}.
         """
         lang = self._lang(language)
         fmt = format or self.valves.DEFAULT_FORMAT or "md"
         result = create_document(
             title=title,
+            body=body,
             summary=summary,
             sections=sections,
             format=fmt,

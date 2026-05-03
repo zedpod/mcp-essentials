@@ -50,11 +50,42 @@ def _err(code: str, lang: str, en_key: str, *, hint_key: str | None = None) -> E
     )
 
 
+_SUMMARY_MAX_CHARS = 280
+_SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+")
+
+
+def _has_content(section: Section) -> bool:
+    if section.content.strip():
+        return True
+    return any(_has_content(child) for child in section.children)
+
+
+def _derive_summary(sections: list[Section]) -> str:
+    """Pull the first 1-2 sentences (or up to ~280 chars) from the first section with content."""
+    for section in sections:
+        text = section.content.strip()
+        if not text:
+            for child in section.children:
+                text = child.content.strip()
+                if text:
+                    break
+        if not text:
+            continue
+        sentences = [s for s in _SENTENCE_SPLIT.split(text) if s.strip()]
+        picked = " ".join(sentences[:2]).strip() or text
+        if len(picked) > _SUMMARY_MAX_CHARS:
+            cut = picked[: _SUMMARY_MAX_CHARS - 3].rsplit(" ", 1)[0]
+            picked = cut + "..."
+        return picked
+    return ""
+
+
 def create_document(
     *,
     title: str,
-    summary: str,
-    sections: list[Section] | list[dict],
+    summary: str | None = None,
+    sections: list[Section] | list[dict] | None = None,
+    body: str | None = None,
     format: DocumentFormat = "md",
     project: str | None = None,
     decisions: list[Decision] | list[dict] | None = None,
@@ -66,16 +97,35 @@ def create_document(
     filename: str | None = None,
     language: str = "en",
 ) -> Result[DocumentArtifact]:
+    """Build and write a document.
+
+    `title` is mandatory. Provide either:
+      - `sections`: an ordered list of {heading, content, children?} for structured docs, or
+      - `body`: a single chunk of markdown prose for the simplest case (wrapped as one section).
+    `summary` is optional; when omitted, the tool derives a 1-2 sentence summary from
+    the first section that has content. Genuinely empty input (no sections, no body)
+    is rejected with INVALID_INPUT - the tool will not fabricate content from nothing.
+    """
     lang = normalize_lang(language)
 
     if not title or not title.strip():
         return Result(ok=False, error=_err("INVALID_INPUT", lang, "error.empty_title"))
-    if not summary or not summary.strip():
-        return Result(ok=False, error=_err("INVALID_INPUT", lang, "error.empty_summary"))
 
-    section_models = [Section.model_validate(s) for s in (sections or [])]
-    if not section_models:
-        return Result(ok=False, error=_err("INVALID_INPUT", lang, "error.no_sections"))
+    section_models: list[Section] = []
+    if sections:
+        section_models = [Section.model_validate(s) for s in sections]
+    elif body and body.strip():
+        section_models = [Section(heading=title.strip(), content=body.strip())]
+
+    if not section_models or not any(_has_content(s) for s in section_models):
+        return Result(ok=False, error=_err("INVALID_INPUT", lang, "error.no_content"))
+
+    summary_clean = (summary or "").strip()
+    if not summary_clean:
+        summary_clean = _derive_summary(section_models)
+    if not summary_clean:
+        return Result(ok=False, error=_err("INVALID_INPUT", lang, "error.empty_summary"))
+    summary = summary_clean
 
     decision_models = [Decision.model_validate(d) for d in (decisions or [])]
     open_q = [q.strip() for q in (open_questions or []) if q and q.strip()]

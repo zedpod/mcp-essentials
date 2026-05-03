@@ -29,9 +29,18 @@ STRINGS: Final[dict[str, dict[str, str]]] = {
             "This document was synthesized by an AI agent through paperforge. "
             "Edit it freely — Markdown is portable and Obsidian-friendly."
         ),
-        "error.empty_title": "title is required.",
-        "error.empty_summary": "summary is required (3-5 sentences).",
-        "error.no_sections": "At least one section is required.",
+        "error.empty_title": (
+            "title is required - synthesize one from the user's request, "
+            "do not use placeholders like 'Untitled'."
+        ),
+        "error.empty_summary": (
+            "summary could not be derived from sections - provide a summary "
+            "or at least one section with non-empty content."
+        ),
+        "error.no_content": (
+            "Provide either a `body` string (simplest) or a `sections` list with content. "
+            "The tool will not fabricate content from nothing."
+        ),
         "error.invalid_format": "format must be one of: md, html, docx, pdf.",
         "error.write_failed": "Failed to write the document file.",
         "error.docx_missing": "python-docx is not installed.",
@@ -68,9 +77,18 @@ STRINGS: Final[dict[str, dict[str, str]]] = {
             "Bu doküman bir AI agent tarafından paperforge üzerinden sentezlendi. "
             "Serbestçe düzenleyin — Markdown taşınabilir ve Obsidian uyumludur."
         ),
-        "error.empty_title": "title zorunlu.",
-        "error.empty_summary": "summary zorunlu (3-5 cümle).",
-        "error.no_sections": "En az bir bölüm gerekli.",
+        "error.empty_title": (
+            "title zorunlu - kullanıcının isteğinden gerçek bir başlık türet, "
+            "'Untitled' gibi yer-tutucu kullanma."
+        ),
+        "error.empty_summary": (
+            "summary bölümlerden türetilemedi - bir summary gir veya içerikli "
+            "en az bir bölüm sağla."
+        ),
+        "error.no_content": (
+            "Ya bir `body` stringi (en basit yol) ya da içerikli bir `sections` listesi gir. "
+            "Araç boştan içerik uydurmaz."
+        ),
         "error.invalid_format": "format şunlardan biri olmalı: md, html, docx, pdf.",
         "error.write_failed": "Dosya yazma başarısız oldu.",
         "error.docx_missing": "python-docx yüklü değil.",

@@ -14,15 +14,46 @@ class TestValidation:
         assert not r.ok
         assert r.error and r.error.code == "INVALID_INPUT"
 
-    def test_empty_summary_rejected(self, tmp_output, sample_payload):
+    def test_empty_summary_with_real_sections_is_derived(self, tmp_output, sample_payload):
+        # Empty summary now derives from the first section's content - not rejected.
         sample_payload["summary"] = "  "
+        r = create_document(**sample_payload)
+        assert r.ok, r.error
+        assert r.data
+        # Derived summary should be non-empty and contain the leading sentence we wrote.
+        assert "Each of the nine tools" in r.data.preview_md
+
+    def test_no_sections_no_body_rejected(self, tmp_output, sample_payload):
+        sample_payload["sections"] = []
         r = create_document(**sample_payload)
         assert not r.ok
         assert r.error and r.error.code == "INVALID_INPUT"
 
-    def test_no_sections_rejected(self, tmp_output, sample_payload):
-        sample_payload["sections"] = []
+    def test_body_shortcut_creates_single_section(self, tmp_output):
+        r = create_document(
+            title="Quick test",
+            body="This is a one-shot markdown body. It should land as a single section.",
+        )
+        assert r.ok, r.error
+        assert r.data and r.data.sections_count == 1
+        # Body becomes a section under the title.
+        assert "## Quick test" in r.data.preview_md
+        assert "one-shot markdown" in r.data.preview_md
+        # Summary auto-derived from the body content.
+        assert "> This is a one-shot markdown body" in r.data.preview_md
+
+    def test_body_loses_to_explicit_sections(self, tmp_output, sample_payload):
+        # When both are provided, sections wins; body is the fallback path.
+        sample_payload["body"] = "ignored body"
         r = create_document(**sample_payload)
+        assert r.ok
+        assert r.data and r.data.sections_count == 2
+
+    def test_truly_empty_content_rejected(self, tmp_output):
+        r = create_document(
+            title="Has title",
+            sections=[{"heading": "h", "content": ""}],  # empty content, no children
+        )
         assert not r.ok
         assert r.error and r.error.code == "INVALID_INPUT"
 
@@ -30,6 +61,13 @@ class TestValidation:
         r = create_document(**sample_payload, format="rtf")  # type: ignore[arg-type]
         assert not r.ok
         assert r.error and r.error.code == "INVALID_INPUT"
+
+    def test_empty_title_message_warns_against_placeholders(self, tmp_output):
+        # The error message should explicitly steer the model away from "Untitled" stubs.
+        r = create_document(title="", body="some content")
+        assert not r.ok
+        assert r.error and r.error.code == "INVALID_INPUT"
+        assert "Untitled" in r.error.message_en or "placeholder" in r.error.message_en.lower()
 
 
 class TestMarkdownOutput:

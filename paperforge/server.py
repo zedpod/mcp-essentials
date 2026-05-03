@@ -1,15 +1,4 @@
-"""paperforge MCP server. Run: python -m paperforge
-
-The synthesis is the LLM caller's job — provide:
-  - a one-line title that orients a cold reader,
-  - a 3-5 sentence summary that captures the document's purpose and current state,
-  - a sequence of body sections that progressively deepen,
-  - explicit decisions (chose / why / rejected),
-  - open questions and next steps (optional but useful for resumption).
-
-The tool writes the assembled document in md / html / docx / pdf and returns the
-file path. The markdown form ships YAML frontmatter so Obsidian indexes it.
-"""
+"""paperforge MCP server. Run: python -m paperforge"""
 
 from mcp.server.fastmcp import FastMCP
 
@@ -21,8 +10,9 @@ mcp = FastMCP("orzed-paperforge")
 @mcp.tool()
 def create_document(
     title: str,
-    summary: str,
-    sections: list[dict],
+    body: str | None = None,
+    summary: str | None = None,
+    sections: list[dict] | None = None,
     format: str = "md",
     project: str | None = None,
     decisions: list[dict] | None = None,
@@ -34,37 +24,50 @@ def create_document(
     filename: str | None = None,
     language: str = "en",
 ) -> dict:
-    """Synthesize the current conversation into a flowing, downloadable document.
+    """Create and save a document file - markdown, HTML, DOCX, or PDF.
 
-    Use this when the user wants to capture decisions, abandoned ideas, and
-    current project state in a portable file they can re-open in Obsidian, hand
-    back to a future LLM, or share with a teammate.
+    The simplest call is `title` plus `body` (one markdown chunk); for richer
+    output pass structured `sections`, `decisions`, `open_questions`, and
+    `next_steps` instead. Synthesize a real `title` from the user's request -
+    the tool will reject "Untitled" stubs.
+
+    When to use:
+      - "save this conversation as a doc"          / "bunu doküman yap"
+      - "create a markdown file about X"           / "X hakkında md dosyası oluştur"
+      - "export our discussion to PDF"             / "konuşmayı PDF'e aktar"
+      - "wrap up our decisions in a Word doc"      / "kararları docx olarak kaydet"
+      - "draft a meeting note from this thread"    / "şu konuşmadan toplantı notu çıkar"
+      - User asks for a downloadable / shareable / Obsidian-importable file
+
+    When NOT to use:
+      - User just wants an inline summary in chat (answer with text, no file)
+      - User asks "what did we decide" - answer directly unless they want a file
+      - For QR codes, news briefs, flight searches, etc. - those tools save their own output
 
     Args:
-        title: Scannable, project-style title — e.g. "mcp-essentials refactor — wave 4 wrap-up".
-        summary: 3-5 sentence TL;DR a cold reader uses to orient.
-        sections: Ordered list of {heading, content, children?}. `content` is
-            markdown prose — write flowing paragraphs, not bullet dumps. Use
-            `children` for sub-sections that progressively deepen the topic.
-        format: One of "md", "html", "docx", "pdf". Default "md" — most portable
-            and Obsidian-friendly.
-        project: Optional project tag (lands in YAML frontmatter and metadata line).
-        decisions: List of {title, chose, why, rejected?, when?}. Capture the
-            non-obvious calls the conversation made — what was rejected and why.
-        open_questions: Things still unsettled, as one-liners.
-        next_steps: Concrete action items.
-        tags: Obsidian-style tags for indexing.
-        source: Optional reference to the originating conversation (URL, ticket id, etc.).
-        output_dir: Override the default save directory.
-        filename: Filename without extension. Default: "<timestamp>-<slug>".
-        language: en/tr — affects section labels and frontmatter.
+        title: REQUIRED. Short scannable title - synthesize one from the user's
+            request. Stub text like "Untitled Document" is refused.
+        body: OPTIONAL, the simplest path - the whole document in one markdown
+            string. Wrapped as a single section under `title`. Use this for
+            short docs.
+        summary: OPTIONAL. 2-4 sentence TL;DR. When omitted, derived from the
+            first section with content.
+        sections: OPTIONAL ordered list of {heading, content, children?}. Use
+            this for richly structured docs; otherwise pass `body`. If both are
+            given, `sections` wins.
+        format: "md" (default, Obsidian-friendly), "html", "docx", or "pdf".
+        decisions: OPTIONAL list of {title, chose, why, rejected?, when?} - the
+            non-obvious calls worth preserving.
+        open_questions, next_steps: OPTIONAL lists for resumability.
+        tags: OPTIONAL Obsidian-style tags.
+        project, source, output_dir, filename, language: see README.
 
     Returns:
-        Result envelope. `data.file_path` is the absolute path to the saved file
-        and `data.preview_md` is the rendered markdown for inspection.
+        Result envelope. `data.file_path` is the absolute path to the saved file.
     """
     result = core_create_document(
         title=title,
+        body=body,
         summary=summary,
         sections=sections,
         format=format,  # type: ignore[arg-type]

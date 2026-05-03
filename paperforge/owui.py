@@ -127,9 +127,18 @@ STRINGS: Final[dict[str, dict[str, str]]] = {
             "This document was synthesized by an AI agent through paperforge. "
             "Edit it freely — Markdown is portable and Obsidian-friendly."
         ),
-        "error.empty_title": "title is required.",
-        "error.empty_summary": "summary is required (3-5 sentences).",
-        "error.no_sections": "At least one section is required.",
+        "error.empty_title": (
+            "title is required - synthesize one from the user's request, "
+            "do not use placeholders like 'Untitled'."
+        ),
+        "error.empty_summary": (
+            "summary could not be derived from sections - provide a summary "
+            "or at least one section with non-empty content."
+        ),
+        "error.no_content": (
+            "Provide either a `body` string (simplest) or a `sections` list with content. "
+            "The tool will not fabricate content from nothing."
+        ),
         "error.invalid_format": "format must be one of: md, html, docx, pdf.",
         "error.write_failed": "Failed to write the document file.",
         "error.docx_missing": "python-docx is not installed.",
@@ -166,9 +175,18 @@ STRINGS: Final[dict[str, dict[str, str]]] = {
             "Bu doküman bir AI agent tarafından paperforge üzerinden sentezlendi. "
             "Serbestçe düzenleyin — Markdown taşınabilir ve Obsidian uyumludur."
         ),
-        "error.empty_title": "title zorunlu.",
-        "error.empty_summary": "summary zorunlu (3-5 cümle).",
-        "error.no_sections": "En az bir bölüm gerekli.",
+        "error.empty_title": (
+            "title zorunlu - kullanıcının isteğinden gerçek bir başlık türet, "
+            "'Untitled' gibi yer-tutucu kullanma."
+        ),
+        "error.empty_summary": (
+            "summary bölümlerden türetilemedi - bir summary gir veya içerikli "
+            "en az bir bölüm sağla."
+        ),
+        "error.no_content": (
+            "Ya bir `body` stringi (en basit yol) ya da içerikli bir `sections` listesi gir. "
+            "Araç boştan içerik uydurmaz."
+        ),
         "error.invalid_format": "format şunlardan biri olmalı: md, html, docx, pdf.",
         "error.write_failed": "Dosya yazma başarısız oldu.",
         "error.docx_missing": "python-docx yüklü değil.",
@@ -605,11 +623,42 @@ def _err(code: str, lang: str, en_key: str, *, hint_key: str | None = None) -> E
     )
 
 
+_SUMMARY_MAX_CHARS = 280
+_SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+")
+
+
+def _has_content(section: Section) -> bool:
+    if section.content.strip():
+        return True
+    return any(_has_content(child) for child in section.children)
+
+
+def _derive_summary(sections: list[Section]) -> str:
+    """Pull the first 1-2 sentences (or up to ~280 chars) from the first section with content."""
+    for section in sections:
+        text = section.content.strip()
+        if not text:
+            for child in section.children:
+                text = child.content.strip()
+                if text:
+                    break
+        if not text:
+            continue
+        sentences = [s for s in _SENTENCE_SPLIT.split(text) if s.strip()]
+        picked = " ".join(sentences[:2]).strip() or text
+        if len(picked) > _SUMMARY_MAX_CHARS:
+            cut = picked[: _SUMMARY_MAX_CHARS - 3].rsplit(" ", 1)[0]
+            picked = cut + "..."
+        return picked
+    return ""
+
+
 def create_document(
     *,
     title: str,
-    summary: str,
-    sections: list[Section] | list[dict],
+    summary: str | None = None,
+    sections: list[Section] | list[dict] | None = None,
+    body: str | None = None,
     format: DocumentFormat = "md",
     project: str | None = None,
     decisions: list[Decision] | list[dict] | None = None,
@@ -621,16 +670,35 @@ def create_document(
     filename: str | None = None,
     language: str = "en",
 ) -> Result[DocumentArtifact]:
+    """Build and write a document.
+
+    `title` is mandatory. Provide either:
+      - `sections`: an ordered list of {heading, content, children?} for structured docs, or
+      - `body`: a single chunk of markdown prose for the simplest case (wrapped as one section).
+    `summary` is optional; when omitted, the tool derives a 1-2 sentence summary from
+    the first section that has content. Genuinely empty input (no sections, no body)
+    is rejected with INVALID_INPUT - the tool will not fabricate content from nothing.
+    """
     lang = normalize_lang(language)
 
     if not title or not title.strip():
         return Result(ok=False, error=_err("INVALID_INPUT", lang, "error.empty_title"))
-    if not summary or not summary.strip():
-        return Result(ok=False, error=_err("INVALID_INPUT", lang, "error.empty_summary"))
 
-    section_models = [Section.model_validate(s) for s in (sections or [])]
-    if not section_models:
-        return Result(ok=False, error=_err("INVALID_INPUT", lang, "error.no_sections"))
+    section_models: list[Section] = []
+    if sections:
+        section_models = [Section.model_validate(s) for s in sections]
+    elif body and body.strip():
+        section_models = [Section(heading=title.strip(), content=body.strip())]
+
+    if not section_models or not any(_has_content(s) for s in section_models):
+        return Result(ok=False, error=_err("INVALID_INPUT", lang, "error.no_content"))
+
+    summary_clean = (summary or "").strip()
+    if not summary_clean:
+        summary_clean = _derive_summary(section_models)
+    if not summary_clean:
+        return Result(ok=False, error=_err("INVALID_INPUT", lang, "error.empty_summary"))
+    summary = summary_clean
 
     decision_models = [Decision.model_validate(d) for d in (decisions or [])]
     open_q = [q.strip() for q in (open_questions or []) if q and q.strip()]
@@ -794,8 +862,9 @@ class Tools:
     def create_document(
         self,
         title: str,
-        summary: str,
-        sections: list[dict],
+        body: str | None = None,
+        summary: str | None = None,
+        sections: list[dict] | None = None,
         format: str | None = None,
         project: str | None = None,
         decisions: list[dict] | None = None,
@@ -807,20 +876,34 @@ class Tools:
         language: str | None = None,
     ) -> str:
         """
-        Synthesize the conversation into a flowing document and save it.
-        Provide title + 3-5 sentence summary + ordered sections with prose content.
-        Decisions, open_questions, and next_steps make the doc resumable later.
+        Create and save a document file - markdown, HTML, DOCX, or PDF.
 
-        :param title: Scannable, project-style title.
-        :param summary: 3-5 sentence orientation text.
-        :param sections: Ordered list of {heading, content, children?}.
+        Simplest call: `title` plus `body` (one markdown chunk). For richer docs
+        pass structured `sections`, `decisions`, `open_questions`, `next_steps`.
+        Synthesize a real title from the user's request; "Untitled" stubs are refused.
+
+        When to use:
+        - "save this as a doc"     / "bunu doküman yap"
+        - "create a markdown file" / "md dosyası oluştur"
+        - "export to PDF / docx"   / "PDF / docx olarak kaydet"
+        - User wants a downloadable, shareable, or Obsidian-importable file.
+
+        When NOT to use:
+        - User just wants an inline summary in chat
+        - User asks for a QR code, flight search, news brief - those tools save themselves
+
+        :param title: REQUIRED. Synthesize from the request - no "Untitled" stubs.
+        :param body: OPTIONAL. The whole doc body as one markdown string (simplest).
+        :param summary: OPTIONAL. Derived from first section's content if omitted.
+        :param sections: OPTIONAL list of {heading, content, children?} for structured docs.
         :param format: 'md' (default), 'html', 'docx', or 'pdf'.
-        :param decisions: List of {title, chose, why, rejected?, when?}.
+        :param decisions: OPTIONAL list of {title, chose, why, rejected?, when?}.
         """
         lang = self._lang(language)
         fmt = format or self.valves.DEFAULT_FORMAT or "md"
         result = create_document(
             title=title,
+            body=body,
             summary=summary,
             sections=sections,
             format=fmt,
