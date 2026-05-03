@@ -16,9 +16,14 @@ mcp = FastMCP("orzed-tubescript")
 def list_transcripts(url_or_id: str, language: str = "en") -> dict:
     """List available transcript tracks for a YouTube video.
 
-    Args:
-        url_or_id: Full YouTube URL (any variant) or 11-char video ID.
-        language: en/tr for output messages.
+    When to use:
+      - "what languages are this video subtitled in"
+      - "şu videoda hangi dil altyazıları var"
+      - User wants to pick a track before fetching the transcript
+
+    When NOT to use:
+      - User just wants the transcript itself - jump to `get_transcript`
+      - Non-YouTube videos (Vimeo, TikTok, etc.) - not supported
     """
     return core_list_transcripts(url_or_id, language=language).model_dump(mode="json")
 
@@ -32,14 +37,27 @@ def get_transcript(
     max_chars: int | None = None,
     language: str = "en",
 ) -> dict:
-    """Fetch a transcript and return it in the requested format.
+    """Fetch a YouTube transcript in text / SRT / VTT / JSON.
+
+    When to use:
+      - "transcript of this YouTube link"   / "şu YouTube videosunun transkripti"
+      - "subtitle this video in TR"         / "şu videoyu Türkçe'ye çevir altyazı"
+      - "give me the captions of X"
+      - "export YouTube subtitles as SRT"
+
+    When NOT to use:
+      - User wants a video summary without the raw transcript - answer from
+        page metadata or other sources, not this tool
+      - Non-YouTube videos (Vimeo, TikTok, etc.) - not supported
+      - Live streams without captions yet - returns UNSUPPORTED
+      - Audio-only podcasts without YouTube uploads
 
     Args:
         url_or_id: YouTube URL or 11-char video ID.
-        prefer_lang: Ordered list of language codes; defaults to ["en"].
-        translate_to: Optional target language code for YouTube translation.
-        format: One of "text", "srt", "vtt", "json".
-        max_chars: Optional cap; truncation falls on the nearest word boundary.
+        prefer_lang: Ordered list of language codes (default ["en"]).
+        translate_to: Optional target language code (uses YouTube's translator).
+        format: "text", "srt", "vtt", or "json".
+        max_chars: Optional cap; truncates at the nearest word boundary.
         language: en/tr for output messages.
     """
     return core_get_transcript(

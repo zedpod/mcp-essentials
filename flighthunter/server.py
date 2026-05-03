@@ -22,21 +22,32 @@ def search_flights(
 ) -> dict:
     """Search Google Flights via SerpAPI.
 
+    When to use:
+      - "find flights IST to LHR Sep 1"   / "İstanbul Londra uçuş bul 1 eylül"
+      - "compare ticket prices X -> Y"
+      - "round trip JFK to NRT next month"
+
+    When NOT to use:
+      - User gave only city names without airports - ask them for IATA codes
+        (or specific airport names) before calling
+      - Train / bus / ferry / car-rental searches - flights only
+      - Hotels or vacation packages - not supported
+      - Generic travel advice without dates - chat answer, no tool
+
+    Requires the `FLIGHTHUNTER_SERPAPI_KEY` env var. Each call costs 1 SerpAPI credit.
+
     Args:
-        origin: 3-letter IATA airport code (e.g. IST, LHR, JFK).
-        destination: 3-letter IATA airport code.
+        origin: 3-letter IATA code (e.g. IST, LHR, JFK).
+        destination: 3-letter IATA code.
         departure_date: YYYY-MM-DD.
-        return_date: Optional YYYY-MM-DD. Empty/None for one-way.
+        return_date: Optional YYYY-MM-DD; omit for one-way.
         cabin_class: economy / premium_economy / business / first.
-        adults / children / infants: passenger counts; total ≤ 9; children < adults.
-        currency: ISO 4217 currency code for prices (default USD).
+        adults / children / infants: total ≤ 9; children < adults.
+        currency: ISO 4217, default USD.
         language: en/tr.
 
     Returns:
-        Result envelope. `data` is a `FlightSearch` with options sorted by price.
-        `data.search_url` opens the same query on Google Flights.
-
-    Requires `FLIGHTHUNTER_SERPAPI_KEY` env var.
+        Result envelope; `data.search_url` deep-links the same query on Google Flights.
     """
     return core_search(
         origin,

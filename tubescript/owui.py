@@ -563,7 +563,12 @@ class Tools:
         return [x.strip() for x in (self.valves.DEFAULT_PREFER_LANG or "en").split(",") if x.strip()]
 
     def list_transcripts(self, url_or_id: str, language: str | None = None) -> str:
-        """List available transcript tracks for a YouTube video."""
+        """List available transcript tracks for a YouTube video.
+
+        Use when: user wants to see which subtitle languages exist before
+        fetching one. Skip if they just want the transcript - go to get_transcript.
+        Non-YouTube URLs are not supported.
+        """
         lang = self._lang(language)
         result = list_transcripts(url_or_id, language=lang)
         return to_markdown(result, lang=lang)
@@ -577,7 +582,13 @@ class Tools:
         max_chars: int | None = None,
         language: str | None = None,
     ) -> str:
-        """Fetch a YouTube transcript in text/srt/vtt/json."""
+        """Fetch a YouTube transcript in text/srt/vtt/json.
+
+        Use when: "transcript of this YouTube link" / "şu YouTube videosunun
+        transkripti" / "subtitle this video as SRT". Skip for non-YouTube
+        videos, audio-only podcasts, or when the user just wants a video
+        summary without the raw transcript.
+        """
         lang = self._lang(language)
         cap = max_chars if max_chars is not None else (self.valves.MAX_CHARS or None)
         result = get_transcript(

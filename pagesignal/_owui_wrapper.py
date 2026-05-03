@@ -36,9 +36,9 @@ class Tools:
         """
         Audit a URL: SEO + AI-answer-readiness signals.
 
-        :param url: Full http(s) URL.
-        :param target_keywords: Optional keyword list to count in body+title+desc.
-        :param language: 'en' or 'tr'.
+        Use when: "audit this page" / "şu sayfayı analiz et" / "SEO check on X".
+        Skip for: page-content summarization (read it inline), DNS / SSL / domain
+        registration (use sitepulse), generic SEO advice (no tool needed).
         """
         lang = self._lang(language)
         result = audit_page(

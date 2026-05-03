@@ -126,7 +126,22 @@ async def ask_user_question(
     timeout_s: float = 300.0,
     language: str = "en",
 ) -> dict:
-    """Ask the user a question via a localhost browser overlay.
+    """Ask the user an interactive question. YOU decide when to call this, not the user.
+
+    When to use:
+      - About to do something with multiple valid approaches and you want the
+        user to pick (e.g. "Which DB? Postgres / MySQL / SQLite")
+      - User's request is ambiguous and the right choice is non-obvious
+      - You need a specific factual input (location, format, key) to proceed
+
+    When NOT to use:
+      - Trivial yes/no confirmations - just proceed unless action is risky
+      - The right answer is obvious from context - don't waste the user's time
+      - To display information - this asks, it doesn't show
+      - When the user already provided the answer in their last message
+
+    Renders an overlay (OWUI) or opens a localhost browser page (MCP). The user
+    clicks, types, or skips. Headless servers (no display) return UNSUPPORTED.
 
     Args:
         prompt: The question text shown to the user.
@@ -135,12 +150,8 @@ async def ask_user_question(
         allow_custom: Show a free-text input below options.
         required: Hide the Skip button.
         min_select / max_select: Constraints for `multi` mode.
-        timeout_s: Auto-resolve as `timeout` after this many seconds (≤ 1800).
+        timeout_s: Auto-resolves as `timeout` after this many seconds (≤ 1800).
         language: en/tr.
-
-    Returns:
-        Result envelope. `data` is an `Answer` with `type`, `indices`, `values`,
-        and optional `custom_text`.
     """
     lang = normalize_lang(language)
     opt_models = [Option(**o) for o in (options or [])]

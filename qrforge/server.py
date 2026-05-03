@@ -27,22 +27,26 @@ def qr_text(
     use_remote_fallback: bool = False,
     language: str = "en",
 ) -> dict:
-    """Encode arbitrary text or any payload as a PNG QR code.
+    """Generate a QR code for arbitrary text - PNG returned as base64.
+
+    When to use:
+      - "QR for this text" / "şu metin için QR kodu üret"
+      - "encode this string as a QR code"
+      - Free-form payload (not a URL, not Wi-Fi, not contact)
+
+    When NOT to use:
+      - The text is an http(s) URL - prefer `qr_url` (validates the scheme)
+      - Wi-Fi credentials - use `qr_wifi`
+      - Contact information - use `qr_vcard`
 
     Args:
-        text: Payload to encode (any string).
+        text: Payload to encode.
         size: Image edge length in pixels, 64-4096. Default 512.
         border: Quiet-zone width in modules, 0-16. Default 4.
-        ec_level: Error correction level, one of L/M/Q/H. Default M.
-        use_remote_fallback: If the local `qrcode` library is missing,
-            optionally generate a URL pointing to api.qrserver.com.
-            Disabled by default — payloads can leak.
-        language: Output language for messages, "en" or "tr". Default "en".
-
-    Returns:
-        Result envelope with QrImage in `data` on success. The PNG arrives as
-        base64 in `data.data_b64` for local rendering, or as `data.remote_url`
-        when remote fallback is used.
+        ec_level: L/M/Q/H. Default M.
+        use_remote_fallback: If the local `qrcode` library is missing, fall
+            back to api.qrserver.com. Off by default since payloads can leak.
+        language: en/tr.
     """
     result = core_qr_text(
         text,
@@ -64,16 +68,19 @@ def qr_url(
     use_remote_fallback: bool = False,
     language: str = "en",
 ) -> dict:
-    """Encode an HTTP(S) URL as a PNG QR code. Rejects schemeless inputs.
+    """Generate a QR code for an HTTP(S) URL. Schemeless inputs are rejected.
+
+    When to use:
+      - "QR for https://..." / "şu link için QR"
+      - User pastes a URL and asks for a scannable code
+
+    When NOT to use:
+      - The input has no http(s) scheme - use `qr_text` for arbitrary strings
+      - Wi-Fi or contact data - use `qr_wifi` or `qr_vcard`
 
     Args:
         url: Full URL including http:// or https://.
-        size: Image edge length in pixels, 64-4096. Default 512.
-        border: Quiet-zone width in modules, 0-16. Default 4.
-        ec_level: Error correction level, one of L/M/Q/H. Default M.
-        use_remote_fallback: Optional fallback to api.qrserver.com if local
-            generation is unavailable. Default False.
-        language: Output language for messages. Default "en".
+        size, border, ec_level, use_remote_fallback, language: see qr_text.
     """
     result = core_qr_url(
         url,
@@ -99,16 +106,25 @@ def qr_wifi(
 ) -> dict:
     """Encode Wi-Fi credentials as a QR code (WIFI: payload format).
 
-    Remote fallback is intentionally disabled — sending Wi-Fi credentials to
-    a third-party rendering service is a leak. If the local `qrcode` library
-    is missing, the call returns UNSUPPORTED with an install hint.
+    When to use:
+      - "Wi-Fi QR for guests" / "misafir Wi-Fi QR kodu"
+      - "share our Wi-Fi as a QR" / "Wi-Fi'yi QR olarak paylaş"
+      - User provides SSID (and usually a password)
+
+    When NOT to use:
+      - User wants to print the password in plain text - that's a `qr_text` call
+      - Wi-Fi without encryption - still use this with encryption="NOPASS"
+
+    Remote fallback is intentionally disabled - sending Wi-Fi credentials to a
+    third-party rendering service is a leak. Missing local library returns
+    UNSUPPORTED with an install hint.
 
     Args:
         ssid: Network name. Required.
         password: Network password (omit for NOPASS).
-        encryption: One of WPA / WEP / NOPASS. Default WPA.
-        hidden: Whether the network is hidden. Default False.
-        size, border, ec_level, language: See qr_text.
+        encryption: WPA / WEP / NOPASS. Default WPA.
+        hidden: Whether the network is hidden.
+        size, border, ec_level, language: see qr_text.
     """
     result = core_qr_wifi(
         ssid,
@@ -138,12 +154,22 @@ def qr_vcard(
 ) -> dict:
     """Encode contact details as a QR code (vCard 3.0).
 
-    Remote fallback is disabled — contact data should not leave the host.
+    When to use:
+      - "QR for my contact card" / "kartvizit QR'ı"
+      - "QR with my phone and email" / "telefon ve mail içeren QR"
+      - User provides at least a name plus phone or email
+
+    When NOT to use:
+      - Just a phone number on its own - `qr_text` is enough
+      - LinkedIn or other social profile URLs alone - `qr_url`
+      - Multiple contacts at once - call this per contact
+
+    Remote fallback is disabled - contact data should not leave the host.
 
     Args:
         full_name: Full name. Required.
-        phone, email, org, title, url: Optional fields. Validated when present.
-        size, border, ec_level, language: See qr_text.
+        phone, email, org, title, url: Optional, validated when present.
+        size, border, ec_level, language: see qr_text.
     """
     result = core_qr_vcard(
         full_name,

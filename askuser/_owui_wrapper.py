@@ -54,16 +54,17 @@ class Tools:
         **_unused: Any,
     ) -> str:
         """
-        Ask the user an interactive question (single, multi, or free-text).
+        Ask the user an interactive question. YOU decide when to call this.
 
-        :param prompt: Question text.
-        :param options: List of {label, description?, value?}.
-        :param mode: 'single' | 'multi' | 'free_text'.
-        :param allow_custom: Show a free-text input below options.
-        :param required: Hide the Skip button.
-        :param min_select / max_select: Constraints for multi mode.
-        :param timeout_s: Auto-resolve to `timeout` after N seconds.
-        :param language: 'en' or 'tr'.
+        Use when: you need the user to pick between multiple valid approaches,
+        the request is ambiguous and you'd otherwise guess, or you need a
+        specific input (key, format, choice) before proceeding.
+
+        Skip for: trivial yes/no confirmations, obvious choices from context,
+        displaying information (this asks, doesn't show), or when the user
+        already answered in their last message.
+
+        Modes: 'single' / 'multi' / 'free_text'.
         """
         lang = self._lang(language)
         opt_models = [Option(**o) for o in (options or [])]

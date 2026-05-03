@@ -32,8 +32,9 @@ class Tools:
         """
         Snapshot a domain: DNS, RDAP, TLS, HTTP/HTTPS.
 
-        :param domain: Hostname or URL.
-        :param checks: Optional subset of ["dns","rdap","ssl","http"].
+        Use when: "DNS records of X" / "SSL sertifikası" / "kim kayıt ettirmiş"
+        / "https çalışıyor mu". Skip for page content audits (pagesignal),
+        WHOIS history, port scans, or general connectivity questions.
         """
         lang = self._lang(language)
         result = inspect(

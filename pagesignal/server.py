@@ -16,15 +16,22 @@ def audit_page(
 ) -> dict:
     """Fetch a URL and audit its SEO + AI-answer-readiness signals.
 
+    When to use:
+      - "audit this page: https://..."   / "şu sayfayı analiz et"
+      - "is this page SEO-friendly"      / "SEO açısından nasıl"
+      - "check structured data on X"     / "X sayfasının schema'sını kontrol et"
+      - "is my page AI-ready / GEO"      / "AI cevap motorlarına hazır mı"
+
+    When NOT to use:
+      - User just wants the page summary - read the page yourself, don't tool-call
+      - DNS / SSL / domain registration - use `sitepulse` instead
+      - General "how to do SEO" advice - answer from your training, no tool
+
     Args:
         url: Full http(s) URL to fetch.
-        target_keywords: Optional list of keywords; counts hits in title+desc+body.
-        language: Output language for messages and question-word lexicon. en/tr.
+        target_keywords: Optional list; counts hits across title + description + body.
+        language: en/tr for messages and question-word lexicon.
         timeout_seconds: Per-request timeout.
-
-    Returns:
-        Result envelope. `data` is a `PageAudit` with meta_tags, headings,
-        readability, geo_signals, performance, and a list of issues.
     """
     result = core_audit_page(
         url,

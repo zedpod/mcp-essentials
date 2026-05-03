@@ -608,10 +608,10 @@ class Tools:
         """
         Search flights via SerpAPI Google Flights.
 
-        :param origin: 3-letter IATA airport code.
-        :param destination: 3-letter IATA airport code.
-        :param departure_date: YYYY-MM-DD.
-        :param return_date: Optional YYYY-MM-DD; omit for one-way.
+        Use when: "find flights IST to LHR Sep 1" / "İstanbul Londra uçuş bul
+        1 eylül". Skip if origin/destination are city names without IATA codes
+        (ask the user first), for trains / buses / hotels, or generic travel
+        advice without dates. Each call costs 1 SerpAPI credit.
         """
         lang = self._lang(language)
         result = search_flights(

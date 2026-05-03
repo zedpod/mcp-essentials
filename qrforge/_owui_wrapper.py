@@ -54,13 +54,10 @@ class Tools:
         language: str | None = None,
     ) -> str:
         """
-        Generate a QR code for arbitrary text or any payload.
+        Generate a QR code for arbitrary text.
 
-        :param text: Payload to encode.
-        :param size: Image edge length in pixels (64-4096).
-        :param border: Quiet-zone width in modules (0-16).
-        :param ec_level: Error correction level: L, M, Q, or H.
-        :param language: Output language ('en' or 'tr').
+        Use when: "QR for this text" / "şu metin için QR". Skip if the input is
+        a URL (use qr_url), Wi-Fi (qr_wifi), or contact info (qr_vcard).
         """
         lang = self._lang(language)
         result = qr_text(
@@ -82,9 +79,10 @@ class Tools:
         language: str | None = None,
     ) -> str:
         """
-        Generate a QR code for an HTTP(S) URL. Rejects schemeless inputs.
+        Generate a QR code for an HTTP(S) URL.
 
-        :param url: Full URL including http:// or https://.
+        Use when: "QR for https://..." / "şu link için QR". Schemeless inputs
+        are rejected - use qr_text for those.
         """
         lang = self._lang(language)
         result = qr_url(
@@ -110,12 +108,10 @@ class Tools:
     ) -> str:
         """
         Generate a Wi-Fi connection QR code (WIFI:... payload).
-        Remote fallback is forbidden for Wi-Fi credentials.
 
-        :param ssid: Wi-Fi network name.
-        :param password: Wi-Fi password (empty for NOPASS).
-        :param encryption: One of WPA, WEP, NOPASS.
-        :param hidden: True if the network is hidden.
+        Use when: "Wi-Fi QR for guests" / "misafir Wi-Fi QR'ı". User provides
+        SSID and usually a password. Encryption: WPA / WEP / NOPASS.
+        Remote fallback is forbidden - credentials never leave the host.
         """
         lang = self._lang(language)
         result = qr_wifi(
@@ -145,14 +141,10 @@ class Tools:
     ) -> str:
         """
         Generate a vCard 3.0 contact QR code.
-        Remote fallback is forbidden — contact data should not leave the host.
 
-        :param full_name: Full name.
-        :param phone: Phone number.
-        :param email: Email address.
-        :param org: Organization / company.
-        :param title: Job title.
-        :param url: Website URL.
+        Use when: "kartvizit QR" / "QR with my phone and email". User provides
+        a name plus at least one of phone/email/url. Remote fallback is
+        forbidden - contact data never leaves the host.
         """
         lang = self._lang(language)
         result = qr_vcard(

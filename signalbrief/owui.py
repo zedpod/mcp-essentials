@@ -603,7 +603,12 @@ class Tools:
         min_score: int | None = None,
         language: str | None = None,
     ) -> str:
-        """Collect a scored news brief from RSS/Atom feeds."""
+        """Collect a scored news brief from RSS / Atom feeds.
+
+        Use when: "AI haberleri özetle" / "tech news today" / "scan funding
+        headlines". Skip for specific-article summaries (use pagesignal),
+        Web search, real-time alerts, stock prices, or non-news topics.
+        """
         lang = self._lang(language)
         result = collect(
             topics=topics,
@@ -618,7 +623,11 @@ class Tools:
         return to_markdown(result, lang=lang)
 
     def list_sources(self, language: str | None = None) -> str:
-        """Show the built-in default RSS/Atom source catalog."""
+        """Show the built-in default RSS / Atom source catalog.
+
+        Use when: "what news sources do you cover" / "hangi kaynakları
+        tarıyorsun". Skip if the user wants actual news - use `collect` instead.
+        """
         lang = self._lang(language)
         return to_markdown(list_sources(language=lang), lang=lang)
 

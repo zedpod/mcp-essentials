@@ -17,14 +17,26 @@ def collect(
     min_score: int = 2,
     language: str = "en",
 ) -> dict:
-    """Aggregate, dedupe, and score recent news items from RSS/Atom feeds.
+    """Aggregate, dedupe, and score recent news items from curated RSS / Atom feeds.
+
+    When to use:
+      - "AI haberleri özetle"             / "AI news brief"
+      - "what happened in tech today"     / "bugün teknolojide neler oldu"
+      - "scan startup funding headlines"  / "girişim yatırım haberleri"
+      - User wants a multi-source briefing on a topic
+
+    When NOT to use:
+      - User has a specific article URL - use `pagesignal` or just read it
+      - General Web search ("what is X") - news-feed only, not a search engine
+      - Real-time breaking news in seconds (this is feed-refresh latency)
+      - Stock prices / sports scores / weather - out of scope
 
     Args:
-        topics: Keyword list. None uses the built-in default set.
-        sources: List of {"name", "url", "language?"} dicts. None uses the default catalog.
-        hours: Recency window, 1..336.
+        topics: Keyword list. None uses a built-in AI / tech / business set.
+        sources: List of {"name", "url", "language?"}. None uses the default catalog.
+        hours: Recency window 1-336 (max 14 days).
         max_per_source: Cap items kept per source.
-        min_score: Drop items below this combined score (keyword + recency + source boost).
+        min_score: Drop items below this score (keyword + recency + source boost).
         language: en/tr.
     """
     return core_collect(
@@ -39,7 +51,15 @@ def collect(
 
 @mcp.tool()
 def list_sources(language: str = "en") -> dict:
-    """List the built-in default RSS/Atom source catalog."""
+    """List the built-in RSS / Atom source catalog (no fetching).
+
+    When to use:
+      - "what news sources do you cover" / "hangi kaynakları tarıyorsun"
+      - User wants to see the catalog before customizing `sources` in `collect`
+
+    When NOT to use:
+      - User wants actual news - call `collect` instead
+    """
     return core_list_sources(language=language).model_dump(mode="json")
 
 

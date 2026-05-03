@@ -44,11 +44,11 @@ class Tools:
 
     def rate(self, base: str, quote: str, on: str | None = None, language: str | None = None) -> str:
         """
-        Foreign-exchange rate from a multi-source provider chain.
-        :param base: Base currency code (e.g. USD).
-        :param quote: Quote currency code (e.g. EUR).
-        :param on: Optional YYYY-MM-DD date; default latest.
-        :param language: en/tr.
+        FX rate (latest or historical) for two ISO 4217 codes.
+
+        Use when: "USD/EUR kuru" / "1 dolar kaç euro". Skip if the user gave
+        an amount (use convert), wants many quotes at once (snapshot), or asked
+        about crypto / stocks (out of scope).
         """
         lang = self._lang(language)
         result = rate(base, quote, on=on, language=lang)
@@ -64,7 +64,9 @@ class Tools:
     ) -> str:
         """
         Convert an amount between two currencies.
-        :param amount: Non-negative finite number.
+
+        Use when: "100 USD kaç EUR" / "convert 50 GBP to TRY". Skip if no
+        amount was given (use rate). Crypto not supported.
         """
         lang = self._lang(language)
         result = convert(amount, base, quote, on=on, language=lang)
@@ -77,9 +79,11 @@ class Tools:
         language: str | None = None,
     ) -> str:
         """
-        Latest rates from `base` against multiple quote currencies.
-        :param base: Base code; default valve DEFAULT_BASE.
-        :param symbols: List of quote codes; None uses a sensible global set.
+        Latest rates from one base to many quote currencies in one call.
+
+        Use when: "USD against major currencies" / "USD'nin tüm büyük
+        paritelere kuru". Skip for single pair (use rate) or historical
+        comparison (use timeseries).
         """
         lang = self._lang(language)
         result = snapshot(base or self.valves.DEFAULT_BASE, symbols=symbols, language=lang)
@@ -94,7 +98,11 @@ class Tools:
         language: str | None = None,
     ) -> str:
         """
-        Daily rates between two dates (range capped at 366 days).
+        Daily rates for a pair over a date range (range capped at 366 days).
+
+        Use when: "EUR/USD past 30 days" / "son 30 gün USD/TRY". Skip for a
+        single date (use rate with `on`). Range over a year - ask the user
+        to narrow before calling.
         """
         lang = self._lang(language)
         result = timeseries(base, quote, start, end, language=lang)

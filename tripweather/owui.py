@@ -673,7 +673,12 @@ class Tools:
         max_results: int = 5,
         language: str | None = None,
     ) -> str:
-        """Look up geographic candidates."""
+        """Look up geographic candidates for a place name.
+
+        Use when: "where is Springfield" / "Cambridge'in koordinatları". Skip
+        if the user wants weather (forecast_by_query) or already has lat/lon
+        (forecast). Reverse geocoding (lat/lon -> name) is not supported.
+        """
         lang = self._lang(language)
         return to_markdown(
             geocode(query, country=country, max_results=max_results, language=lang),
@@ -689,7 +694,12 @@ class Tools:
         units: str | None = None,
         language: str | None = None,
     ) -> str:
-        """Forecast for explicit coordinates."""
+        """Daily forecast for explicit lat/lon (Open-Meteo).
+
+        Use when: user already has coordinates, or you geocoded first and now
+        have a chosen candidate. Skip if the user gave a place name (use
+        forecast_by_query instead). Past dates not supported (forecast only).
+        """
         lang = self._lang(language)
         return to_markdown(
             forecast(
@@ -712,7 +722,14 @@ class Tools:
         units: str | None = None,
         language: str | None = None,
     ) -> str:
-        """Geocode → forecast in one call. Sets a disambiguation warning on tie."""
+        """Geocode + forecast in one call. The default for plain-language requests.
+
+        Use when: "İstanbul hava durumu" / "weather in Tokyo next 5 days" /
+        "yarın Paris'te yağmur var mı". Skip if the user gave lat/lon (use
+        forecast). Climate / historical weather and past dates are out of scope.
+        Sets meta.disambiguation_warning=True when two equally-scored candidates
+        exist so the LLM can ask which city.
+        """
         lang = self._lang(language)
         return to_markdown(
             forecast_by_query(
