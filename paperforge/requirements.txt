@@ -1,0 +1,7 @@
+pydantic>=2.5
+mcp>=1.2
+
+# Optional format engines. Skip them and the tool returns UNSUPPORTED with an
+# install hint when the user requests that format.
+python-docx>=1.0
+weasyprint>=62
