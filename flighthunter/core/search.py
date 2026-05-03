@@ -1,4 +1,4 @@
-"""Public search_flights function — wraps SerpAPI Google Flights engine."""
+"""Public search_flights function - wraps SerpAPI Google Flights engine."""
 
 import os
 import re

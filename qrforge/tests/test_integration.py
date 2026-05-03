@@ -1,6 +1,6 @@
 """Live integration tests for qrforge.
 
-qrforge has very little to integrate with — local QR generation is offline by
+qrforge has very little to integrate with - local QR generation is offline by
 design. The single live path is the optional remote fallback to
 api.qrserver.com when the `qrcode` library is missing. We don't actually want
 to depend on that service in CI, so this file is mostly a placeholder showing

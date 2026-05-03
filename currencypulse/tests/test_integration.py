@@ -1,4 +1,4 @@
-"""Live currencypulse tests — gated by RUN_LIVE=1."""
+"""Live currencypulse tests - gated by RUN_LIVE=1."""
 
 import pytest
 

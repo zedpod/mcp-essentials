@@ -10,7 +10,7 @@ Part of [mcp-essentials](../README.md). **Requires a SerpAPI key.**
 
 `origin` and `destination` must be 3-letter IATA airport codes (e.g. `IST`, `LHR`, `JFK`). `departure_date` and `return_date` use `YYYY-MM-DD`. The `data.search_url` field contains a Google Flights deep link for booking.
 
-## Setup — API key
+## Setup - API key
 
 1. Create a free [SerpAPI account](https://serpapi.com/users/sign_up) (100 searches/month on the free tier).
 2. Copy your API key.
@@ -32,9 +32,21 @@ echo 'FLIGHTHUNTER_SERPAPI_KEY=your-key-here' > flighthunter/.env
 }
 ```
 
-## Install — Open WebUI
+## Install - Open WebUI
 
-Paste [`./owui.py`](./owui.py) into Admin → Tools. Either set the `SERPAPI_API_KEY` Valve or supply `FLIGHTHUNTER_SERPAPI_KEY` in the runtime env.
+1. Paste [`./owui.py`](./owui.py) into Admin → Tools.
+2. Description field (optional - docstrings already carry bilingual EN/TR triggers):
+   ```text
+   Search flights via SerpAPI Google Flights. Returns ranked options with prices and a Google Flights deep-link.
+
+   Use when the user provides origin and destination IATA codes (or asks you to fetch them) plus a date and asks to:
+   - find flights between two airports
+   - compare ticket prices for a route
+   - search a round-trip with specific dates
+
+   Do NOT use for: trains, buses, ferries, hotels, car rentals, or generic travel advice without dates and airports. Each call costs 1 SerpAPI credit.
+   ```
+3. Either set the `SERPAPI_API_KEY` Valve or supply `FLIGHTHUNTER_SERPAPI_KEY` in the runtime env.
 
 ## Errors
 

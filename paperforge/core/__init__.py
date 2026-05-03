@@ -1,4 +1,4 @@
-"""paperforge.core — pure logic for assembling and writing documents."""
+"""paperforge.core - pure logic for assembling and writing documents."""
 
 from .build import create_document, default_output_dir
 from .i18n import DEFAULT, SUPPORTED, normalize_lang, t

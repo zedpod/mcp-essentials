@@ -1,4 +1,4 @@
-"""Domain parsing — uses tldextract (which keeps the Public Suffix List fresh)."""
+"""Domain parsing - uses tldextract (which keeps the Public Suffix List fresh)."""
 
 import urllib.parse
 

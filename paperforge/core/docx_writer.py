@@ -21,7 +21,7 @@ def write_docx(markdown_source: str, *, output_path: Path, title: str) -> bool:
     style.font.size = Pt(11)
 
     lines = markdown_source.splitlines()
-    # Strip YAML frontmatter — docx readers don't care.
+    # Strip YAML frontmatter - docx readers don't care.
     if lines and lines[0].strip() == "---":
         for i in range(1, len(lines)):
             if lines[i].strip() == "---":
@@ -85,7 +85,7 @@ _INLINE_PATTERNS = [
 def _strip_inline(text: str) -> str:
     """Remove markdown inline markers; docx body is plain runs.
 
-    A richer renderer with bold/italic runs is left for v2 — most users edit
+    A richer renderer with bold/italic runs is left for v2 - most users edit
     the docx in Word and re-bold things to taste anyway.
     """
     out = text

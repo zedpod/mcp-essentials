@@ -1,4 +1,4 @@
-"""HTML parser using stdlib html.parser — no soup dependency."""
+"""HTML parser using stdlib html.parser - no soup dependency."""
 
 import json
 import re

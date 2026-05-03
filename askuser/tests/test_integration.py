@@ -1,4 +1,4 @@
-"""askuser live tests — RUN_LIVE=1.
+"""askuser live tests - RUN_LIVE=1.
 
 Skipped by default because they actually open a browser window. Manual smoke
 test: run `python -m askuser` from a desktop terminal and connect from an MCP

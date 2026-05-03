@@ -2,7 +2,7 @@
 
 TITLE = "AskUser"
 DESCRIPTION = (
-    "Interactive question prompt — single-select, multi-select, or free-text. "
+    "Interactive question prompt - single-select, multi-select, or free-text. "
     "Renders a polished animated overlay with keyboard navigation, focus trap, "
     "search filter for long lists, and respects prefers-reduced-motion."
 )

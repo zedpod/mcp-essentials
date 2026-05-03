@@ -1,4 +1,4 @@
-# AGENTS.md — qrforge
+# AGENTS.md - qrforge
 
 > Read this before changing anything in `qrforge/`. Combine with [`../AGENTS.md`](../AGENTS.md) for repo-wide rules.
 
@@ -20,7 +20,7 @@ Both wrappers expose four functions with parallel signatures. The MCP side retur
 | `qr_wifi` | `ssid` | `password, encryption, hidden, size, border, ec_level, language` | `Result[QrImage]` |
 | `qr_vcard` | `full_name` | `phone, email, org, title, url, size, border, ec_level, language` | `Result[QrImage]` |
 
-`use_remote_fallback` is **deliberately absent** from `qr_wifi` and `qr_vcard` — the security posture of those payloads forbids remote rendering. Do not add it.
+`use_remote_fallback` is **deliberately absent** from `qr_wifi` and `qr_vcard` - the security posture of those payloads forbids remote rendering. Do not add it.
 
 ## Return-shape contract
 
@@ -66,7 +66,7 @@ Both message languages are always populated (repo-wide invariant). The OWUI wrap
 
 ## Language / i18n
 
-`language` defaults to `"en"`. Anything unsupported normalizes to `"en"` silently — that is, no error, just the default. Keys live in `core/i18n.py`. Adding a new error or label requires entries in **both** `en` and `tr`; the repo-level test (`tests/test_repo.py::test_i18n_key_parity`) enforces that.
+`language` defaults to `"en"`. Anything unsupported normalizes to `"en"` silently - that is, no error, just the default. Keys live in `core/i18n.py`. Adding a new error or label requires entries in **both** `en` and `tr`; the repo-level test (`tests/test_repo.py::test_i18n_key_parity`) enforces that.
 
 When introducing a new language (say `de`):
 1. Add a `"de"` block in `STRINGS` with the same keys as `"en"`.
@@ -78,18 +78,18 @@ When introducing a new language (say `de`):
 - **Local generation**: `qrcode[pil]` (optional dependency). When missing, qrforge cannot render Wi-Fi or vCard payloads (returns `UNSUPPORTED` with an install hint).
 - **Remote fallback**: `https://api.qrserver.com/v1/create-qr-code/`. Only used for `qr_text` / `qr_url` when explicitly opted in. Carries no API key. Free, but has rate limits in practice.
 
-No retry/backoff inside qrforge — there is no HTTP fetch in the happy path, only URL construction. The browser/OWUI fetches the remote PNG when rendering.
+No retry/backoff inside qrforge - there is no HTTP fetch in the happy path, only URL construction. The browser/OWUI fetches the remote PNG when rendering.
 
 ## Env vars
 
-**None.** The optional `USE_REMOTE_FALLBACK` is configured via OWUI Valves or via the `use_remote_fallback` argument; do not introduce env-var configuration without good reason — `.env.example` does not exist for this tool intentionally.
+**None.** The optional `USE_REMOTE_FALLBACK` is configured via OWUI Valves or via the `use_remote_fallback` argument; do not introduce env-var configuration without good reason - `.env.example` does not exist for this tool intentionally.
 
 ## Test expectations
 
-- **`tests/test_core_qr.py`** — 30+ unit tests. Pure logic. No network. Coverage target ≥ 90% on `core/`.
-- **`tests/test_owui.py`** — Loads the *generated* `owui/main.py` as a synthetic module and exercises the `Tools` class. Includes a parity test against `core` to catch drift.
-- **`tests/test_mcp.py`** — In-process FastMCP smoke tests. Checks tool registration, JSON-Schema, and call routing.
-- **`tests/test_integration.py`** — Live tests, marked `@pytest.mark.live`. Skipped unless `RUN_LIVE=1`. qrforge has very few live paths because rendering is offline.
+- **`tests/test_core_qr.py`** - 30+ unit tests. Pure logic. No network. Coverage target ≥ 90% on `core/`.
+- **`tests/test_owui.py`** - Loads the *generated* `owui/main.py` as a synthetic module and exercises the `Tools` class. Includes a parity test against `core` to catch drift.
+- **`tests/test_mcp.py`** - In-process FastMCP smoke tests. Checks tool registration, JSON-Schema, and call routing.
+- **`tests/test_integration.py`** - Live tests, marked `@pytest.mark.live`. Skipped unless `RUN_LIVE=1`. qrforge has very few live paths because rendering is offline.
 
 When changing `core/` or `owui/_wrapper.py`, run:
 

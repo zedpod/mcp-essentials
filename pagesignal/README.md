@@ -8,20 +8,33 @@ Part of [mcp-essentials](../README.md). Dual-mode: Open WebUI Tool **and** real 
 
 One MCP tool, `audit_page(url, target_keywords?, language)`, returning a structured `PageAudit`:
 
-- **meta_tags** — title, description, canonical, robots, Open Graph, Twitter cards, lang, charset
-- **headings** — H1/H2/H3 counts and text, skipped-level detection
-- **readability** — word/sentence count, average sentence length, detected language
-- **geo_signals** — JSON-LD schema types (FAQPage, HowTo, Article, Question), question-style headings (lexicons in en/tr/de/es/fr/it/pt/ar), keyword hit counts
-- **performance** — bytes, response time, status, redirect count
-- **issues** — prioritized list with severity (`info`/`warning`/`error`), code, and i18n messages
+- **meta_tags** - title, description, canonical, robots, Open Graph, Twitter cards, lang, charset
+- **headings** - H1/H2/H3 counts and text, skipped-level detection
+- **readability** - word/sentence count, average sentence length, detected language
+- **geo_signals** - JSON-LD schema types (FAQPage, HowTo, Article, Question), question-style headings (lexicons in en/tr/de/es/fr/it/pt/ar), keyword hit counts
+- **performance** - bytes, response time, status, redirect count
+- **issues** - prioritized list with severity (`info`/`warning`/`error`), code, and i18n messages
 
 Uses stdlib `html.parser` (no external soup dep). Honors `noindex`. Detects JS-heavy pages heuristically.
 
-## Install — Open WebUI
+## Install - Open WebUI
 
-Paste [`./owui.py`](./owui.py) into Admin → Tools. Configure Valves (`DEFAULT_LANGUAGE`, `TIMEOUT_SECONDS`, `USER_AGENT`).
+1. Paste [`./owui.py`](./owui.py) into Admin → Tools.
+2. Description field (optional - docstrings already carry bilingual EN/TR triggers):
+   ```text
+   Audit a single URL for SEO and AI-answer (GEO) readiness.
 
-## Install — Claude Desktop / Cursor / Cline
+   Use when the user provides a URL and asks about:
+   - SEO quality of the page
+   - structured data / schema / JSON-LD
+   - AI answer-readiness or GEO signals
+   - meta tags, headings, readability
+
+   Do NOT use for: summarizing the page content (read it inline), DNS / SSL / domain registration (use sitepulse), or generic SEO advice.
+   ```
+3. Configure Valves (`DEFAULT_LANGUAGE`, `TIMEOUT_SECONDS`, `USER_AGENT`).
+
+## Install - Claude Desktop / Cursor / Cline
 
 ```json
 {
@@ -75,7 +88,7 @@ Tool-specific notes: [./AGENTS.md](./AGENTS.md).
 
 ## License
 
-Apache 2.0 — see [../LICENSE](../LICENSE).
+Apache 2.0 - see [../LICENSE](../LICENSE).
 
 ---
 

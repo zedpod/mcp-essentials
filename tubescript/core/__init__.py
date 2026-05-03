@@ -1,4 +1,4 @@
-"""tubescript.core — pure logic."""
+"""tubescript.core - pure logic."""
 
 from .extract import extract_video_id
 from .format import format_transcript

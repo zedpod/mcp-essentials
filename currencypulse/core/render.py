@@ -1,4 +1,4 @@
-"""Markdown rendering for currencypulse Result types — language-aware formatting."""
+"""Markdown rendering for currencypulse Result types - language-aware formatting."""
 
 from .i18n import t
 from .types import (

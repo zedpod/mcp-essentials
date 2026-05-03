@@ -1,4 +1,4 @@
-"""currencypulse.core — pure FX logic."""
+"""currencypulse.core - pure FX logic."""
 
 from .fx import convert, rate, snapshot, timeseries
 from .i18n import DEFAULT, SUPPORTED, normalize_lang, t

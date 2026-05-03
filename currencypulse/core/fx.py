@@ -149,7 +149,7 @@ def rate(
     base_n, base_dep = _resolve_deprecated(base)
     quote_n, quote_dep = _resolve_deprecated(quote)
     if base_n == quote_n:
-        # Same currency — return 1.0 deterministically without hitting the network.
+        # Same currency - return 1.0 deterministically without hitting the network.
         on_date, derr = _parse_date(on, language)
         if derr:
             return Result(ok=False, error=derr)

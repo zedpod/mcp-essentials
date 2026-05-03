@@ -16,7 +16,7 @@ def to_markdown(result: Result[DocumentArtifact], lang: str = "en") -> str:
 
     a = result.data
     parts = [
-        f"# {t('title', lang)} — `{a.format}`",
+        f"# {t('title', lang)} - `{a.format}`",
         "",
         f"**{a.title}**",
         "",

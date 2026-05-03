@@ -1,14 +1,14 @@
-# AGENTS.md — orzed/mcp-essentials
+# AGENTS.md - orzed/mcp-essentials
 
 > Master guide for AI agents and humans contributing to this repo.
-> If you change one tool, **read only that tool's `AGENTS.md`** (linked below) plus this file. Don't load all of them — the per-tool guides exist precisely so the master file stays small.
+> If you change one tool, **read only that tool's `AGENTS.md`** (linked below) plus this file. Don't load all of them - the per-tool guides exist precisely so the master file stays small.
 
 ## Mission
 
 Ship small, dual-mode tools that solve concrete jobs and are pleasant to read. Each tool runs two ways:
 
-1. As an **Open WebUI Tool** — a single paste-able `<tool>/owui/main.py` users drop into OWUI Admin.
-2. As a real **MCP server** (FastMCP / stdio) — `python -m <tool>.mcp` for Claude Desktop, Cursor, Cline, Continue, and any other MCP client.
+1. As an **Open WebUI Tool** - a single paste-able `<tool>/owui/main.py` users drop into OWUI Admin.
+2. As a real **MCP server** (FastMCP / stdio) - `python -m <tool>.mcp` for Claude Desktop, Cursor, Cline, Continue, and any other MCP client.
 
 Optimize for clarity over cleverness. The same LLM that calls these tools also reads them when something breaks; make both jobs easy.
 
@@ -19,14 +19,14 @@ Every tool lives in its own folder with this flat-as-possible structure:
 ```
 <tool>/
 ├── owui.py            # GENERATED single-file Open WebUI Tool. Paste into OWUI Admin.
-├── server.py          # FastMCP server definition (the MCP brain — small, calls core.*).
+├── server.py          # FastMCP server definition (the MCP brain - small, calls core.*).
 ├── __main__.py        # Lets `python -m <tool>` start the MCP server over stdio.
 ├── core/              # Pure logic. Returns Pydantic Result[T]. No I/O at import time.
 │   ├── __init__.py    # Re-exports + __bundle_order__ list driving the OWUI bundler.
 │   ├── types.py       # Pydantic: Result, ErrorInfo, Input/Output models.
 │   ├── i18n.py        # STRINGS = {"en": {...}, "tr": {...}} + t() helper.
 │   ├── http.py        # build_client + get_json_with_retry (sync) and async variant.
-│   ├── render.py      # to_markdown(result, lang) — used by the OWUI wrapper.
+│   ├── render.py      # to_markdown(result, lang) - used by the OWUI wrapper.
 │   └── <feature>.py   # One file per logical sub-domain.
 ├── tests/
 │   ├── conftest.py
@@ -35,7 +35,7 @@ Every tool lives in its own folder with this flat-as-possible structure:
 │   ├── test_server.py # Smoke: in-process FastMCP client of server.py.
 │   ├── test_integration.py  # @pytest.mark.live, RUN_LIVE=1 only.
 │   └── golden/        # Expected markdown outputs (optional).
-├── static/            # askuser only — overlay HTML/CSS/JS shared with localhost MCP UI.
+├── static/            # askuser only - overlay HTML/CSS/JS shared with localhost MCP UI.
 ├── _owui_meta.py      # Bundler input: TITLE/DESCRIPTION/AUTHOR/VERSION/...
 ├── _owui_wrapper.py   # Bundler input: the `class Tools:` shell that delegates to core.
 ├── .env.example       # Only when the tool consumes env vars.
@@ -52,13 +52,13 @@ The root holds `tools/bundle_owui.py`, `tests/test_repo.py`, the master `AGENTS.
 
 These apply to every tool. The repo-level test suite enforces several of them.
 
-1. **`language: str = "en"` is a mandatory parameter on every public function.** Valves and env vars are *defaults only*; the per-call argument always wins. `core/` code never reads `self.valves.LANGUAGE` — that is the OWUI wrapper's job, and the wrapper passes `language=` explicitly.
+1. **`language: str = "en"` is a mandatory parameter on every public function.** Valves and env vars are *defaults only*; the per-call argument always wins. `core/` code never reads `self.valves.LANGUAGE` - that is the OWUI wrapper's job, and the wrapper passes `language=` explicitly.
 2. **Return `Result[T]`. Never raise across the public boundary.** Inside `core/` you may raise freely; catch at the seam and convert to `Result(ok=False, error=ErrorInfo(...))`.
-3. **`ErrorInfo` always carries `code` (machine-readable enum), `message_en`, `message_tr`, and an optional `hint`** explaining recovery. `message_tr` cannot be empty — repo tests fail if it is.
+3. **`ErrorInfo` always carries `code` (machine-readable enum), `message_en`, `message_tr`, and an optional `hint`** explaining recovery. `message_tr` cannot be empty - repo tests fail if it is.
 4. **HTTP goes through `core/http.py`** built on `httpx`. Default timeout 10s, max 20s. Retry idempotent GETs three times on 408/429/5xx with jittered exponential backoff. Honor `Retry-After`.
-5. **No silent fallbacks.** A hardcoded city list, a remote API substituting for a local generator, a default symbol set that excludes whole continents — all of these ship as explicit, surfaced behavior. Provider switches show up in `meta.source`. Remote rendering of sensitive payloads requires explicit opt-in plus a `meta.warning`.
-6. **No silent override of caller intent.** If two parameters conflict, return `INVALID_INPUT` with a `hint`. The original `askuser` valve `allow_multiple` overrode `mode` silently — that is the canonical anti-pattern this rule kills.
-7. **No personalization in tool output.** Names, companies, in-jokes — they do not belong in tool responses. They belong in the caller's prompt.
+5. **No silent fallbacks.** A hardcoded city list, a remote API substituting for a local generator, a default symbol set that excludes whole continents - all of these ship as explicit, surfaced behavior. Provider switches show up in `meta.source`. Remote rendering of sensitive payloads requires explicit opt-in plus a `meta.warning`.
+6. **No silent override of caller intent.** If two parameters conflict, return `INVALID_INPUT` with a `hint`. The original `askuser` valve `allow_multiple` overrode `mode` silently - that is the canonical anti-pattern this rule kills.
+7. **No personalization in tool output.** Names, companies, in-jokes - they do not belong in tool responses. They belong in the caller's prompt.
 8. **Locale-independent parsing.** Don't `strptime` month names. Use `cryptography` for cert dates. Format numbers in `render.py` based on `language`, never on `LC_NUMERIC`.
 9. **Token-based keyword matching only.** Substring matching ("ai" in "brain") is forbidden. Use Unicode word boundaries or exact quoted-phrase matching.
 10. **No `print()` in MCP mode.** Stdio is the protocol channel. Loggers go to stderr.
@@ -99,10 +99,10 @@ When you change one tool, load *only* the relevant `AGENTS.md` plus this file. E
 
 ## Testing & CI
 
-- `make test` — mocked unit + integration. Run on every PR.
-- `make test-live` — `RUN_LIVE=1` real APIs. Nightly cron only.
-- `make check-bundle` — fails if any `<tool>/owui/main.py` drifts from `core/`. Required to merge.
-- `tests/test_repo.py` — repo-level invariants: each tool has the required files; `STRINGS["en"]` and `STRINGS["tr"]` carry identical key sets; each `mcp/server.py` exports a `FastMCP` instance.
+- `make test` - mocked unit + integration. Run on every PR.
+- `make test-live` - `RUN_LIVE=1` real APIs. Nightly cron only.
+- `make check-bundle` - fails if any `<tool>/owui/main.py` drifts from `core/`. Required to merge.
+- `tests/test_repo.py` - repo-level invariants: each tool has the required files; `STRINGS["en"]` and `STRINGS["tr"]` carry identical key sets; each `mcp/server.py` exports a `FastMCP` instance.
 
 ## Release
 

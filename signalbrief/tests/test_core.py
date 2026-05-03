@@ -32,7 +32,7 @@ class TestList:
         assert r.ok
         names = {s.name for s in r.data.sources}
         assert "TechCrunch" in names
-        # Catalog must be deduped (no Webrazzi/ShiftDelete x2 — legacy bug).
+        # Catalog must be deduped (no Webrazzi/ShiftDelete x2 - legacy bug).
         urls = [s.url for s in r.data.sources]
         assert len(urls) == len(set(urls))
 

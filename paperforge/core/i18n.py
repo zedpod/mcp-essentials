@@ -27,7 +27,7 @@ STRINGS: Final[dict[str, dict[str, str]]] = {
         "decision.when": "When",
         "footer.note": (
             "This document was synthesized by an AI agent through paperforge. "
-            "Edit it freely — Markdown is portable and Obsidian-friendly."
+            "Edit it freely - Markdown is portable and Obsidian-friendly."
         ),
         "error.empty_title": (
             "title is required - synthesize one from the user's request, "
@@ -75,7 +75,7 @@ STRINGS: Final[dict[str, dict[str, str]]] = {
         "decision.when": "Ne zaman",
         "footer.note": (
             "Bu doküman bir AI agent tarafından paperforge üzerinden sentezlendi. "
-            "Serbestçe düzenleyin — Markdown taşınabilir ve Obsidian uyumludur."
+            "Serbestçe düzenleyin - Markdown taşınabilir ve Obsidian uyumludur."
         ),
         "error.empty_title": (
             "title zorunlu - kullanıcının isteğinden gerçek bir başlık türet, "

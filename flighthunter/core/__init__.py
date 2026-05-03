@@ -1,4 +1,4 @@
-"""flighthunter.core — pure logic."""
+"""flighthunter.core - pure logic."""
 
 from .i18n import DEFAULT, SUPPORTED, normalize_lang, t
 from .render import to_markdown

@@ -1,4 +1,4 @@
-"""geocode(query) — Open-Meteo geocoding without country bias or hardcoded fallbacks."""
+"""geocode(query) - Open-Meteo geocoding without country bias or hardcoded fallbacks."""
 
 from .http import (
     NetworkTimeout,
@@ -88,7 +88,7 @@ def geocode(
             )
 
         candidates = [_to_candidate(r) for r in results]
-        # Open-Meteo's ranking_score is monotonic — keep its order; no country bias.
+        # Open-Meteo's ranking_score is monotonic - keep its order; no country bias.
         return Result(
             ok=True,
             data=GeocodeResult(query=query, candidates=candidates),

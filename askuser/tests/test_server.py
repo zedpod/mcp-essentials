@@ -1,6 +1,6 @@
 """askuser server smoke. Validates that the MCP tool wires through.
 
-We don't actually open a browser in CI — we just exercise the validation path.
+We don't actually open a browser in CI - we just exercise the validation path.
 """
 
 import json

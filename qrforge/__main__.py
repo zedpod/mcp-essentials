@@ -1,4 +1,4 @@
-"""Entry point for `python -m qrforge` — runs the FastMCP server over stdio."""
+"""Entry point for `python -m qrforge` - runs the FastMCP server over stdio."""
 
 from .server import mcp
 

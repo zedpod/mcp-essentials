@@ -1,4 +1,4 @@
-"""askuser unit tests — validation + overlay JS shape."""
+"""askuser unit tests - validation + overlay JS shape."""
 
 import json
 
@@ -74,7 +74,7 @@ class TestOverlayJS:
     def test_overlay_payload_round_trips(self):
         # Extract the embedded JSON and ensure it parses cleanly.
         js = build_overlay_js(_q(timeout_s=60.0))
-        # Pull the config object — first JSON-looking blob after `var CFG =`.
+        # Pull the config object - first JSON-looking blob after `var CFG =`.
         marker = "var CFG = "
         start = js.index(marker) + len(marker)
         end = js.index(";", start)

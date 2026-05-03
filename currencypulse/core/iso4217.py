@@ -1,7 +1,7 @@
 """Frozen ISO 4217 currency codes used for input validation.
 
 Generated from the ISO 4217 active-codes list (subset of ~160 fiat currencies).
-Crypto codes (BTC/ETH/etc.) are intentionally excluded — this tool returns
+Crypto codes (BTC/ETH/etc.) are intentionally excluded - this tool returns
 UNSUPPORTED for them rather than guessing.
 """
 
@@ -49,7 +49,7 @@ CRYPTO_CODES: Final[frozenset[str]] = frozenset(
     {"BTC", "ETH", "USDT", "USDC", "BNB", "XRP", "ADA", "SOL", "DOGE", "TRX", "DOT"}
 )
 
-# Sensible default symbols list — broader than the legacy Western-only set,
+# Sensible default symbols list - broader than the legacy Western-only set,
 # covers Asia, LATAM, MENA, Africa.
 DEFAULT_SYMBOLS: Final[tuple[str, ...]] = (
     "USD", "EUR", "GBP", "JPY", "CHF", "CAD", "AUD",

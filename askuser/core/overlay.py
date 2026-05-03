@@ -371,7 +371,7 @@ return (function() {
 """
 
 
-_LOCALHOST_BOOTSTRAP = "// localhost mode — promise return is unused; transport is the fetch above."
+_LOCALHOST_BOOTSTRAP = "// localhost mode - promise return is unused; transport is the fetch above."
 
 
 def build_overlay_js(question: Question, *, language: str = "en", mode: Mode = "owui",

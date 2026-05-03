@@ -1,4 +1,4 @@
-"""flighthunter live tests — RUN_LIVE=1.
+"""flighthunter live tests - RUN_LIVE=1.
 
 Be deliberate: each call burns one SerpAPI search credit.
 """
@@ -24,7 +24,7 @@ def test_live_basic_round_trip():
         adults=1,
         currency="USD",
     )
-    # Either we got results or SerpAPI returned a credible error — both shapes are valid.
+    # Either we got results or SerpAPI returned a credible error - both shapes are valid.
     assert r.ok or (r.error and r.error.code in ("UPSTREAM_ERROR", "RATE_LIMITED"))
     if r.ok:
         assert r.data and r.data.options

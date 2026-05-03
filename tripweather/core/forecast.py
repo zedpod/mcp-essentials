@@ -1,4 +1,4 @@
-"""forecast(lat, lon) and forecast_by_query(query) — Open-Meteo daily forecast."""
+"""forecast(lat, lon) and forecast_by_query(query) - Open-Meteo daily forecast."""
 
 from datetime import date as Date
 from datetime import timedelta

@@ -1,4 +1,4 @@
-"""paperforge live tests — none required.
+"""paperforge live tests - none required.
 
 paperforge has no external network dependencies; the file-system writes are
 covered by the unit tests. This file exists for the repo invariant only.

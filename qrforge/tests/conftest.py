@@ -23,7 +23,7 @@ def tmp_env(monkeypatch):
     return _set
 
 
-def pytest_collection_modifyitems(config, items):  # noqa: D401 — pytest hook
+def pytest_collection_modifyitems(config, items):  # noqa: D401 - pytest hook
     """Skip live tests unless RUN_LIVE=1 is set in the environment."""
     if os.getenv("RUN_LIVE") == "1":
         return

@@ -1,4 +1,4 @@
-"""Pure validation for Question. No silent overrides — conflicting fields → INVALID_INPUT."""
+"""Pure validation for Question. No silent overrides - conflicting fields → INVALID_INPUT."""
 
 from .i18n import normalize_lang, t
 from .types import ErrorInfo, Question

@@ -19,7 +19,7 @@ venv/
 env/
 ENV/
 
-# Secrets — never commit; ship .env.example instead
+# Secrets - never commit; ship .env.example instead
 .env
 .env.*
 !.env.example

@@ -4,7 +4,7 @@
 [tool.ruff]
 line-length = 100
 target-version = "py310"
-# Auto-generated OWUI single-file bundles aren't worth linting — `make check-bundle`
+# Auto-generated OWUI single-file bundles aren't worth linting - `make check-bundle`
 # already enforces they match `core/`, and the generator emits stylistic patterns
 # we don't care about in dist artifacts. Also exclude legacy main.py files for
 # tools whose refactor wave hasn't landed yet.
@@ -26,10 +26,10 @@ ignore = [
     "E501",
     "N812",   # `import as Date` / `as ET` conventions are intentional aliases
     "N818",   # Custom HTTP exceptions (RateLimited, NetworkTimeout) read better without -Error suffix
-    "SIM102", # nested-if collapse — sometimes hurts readability
-    "SIM103", # truthy short-circuit — same reason
+    "SIM102", # nested-if collapse - sometimes hurts readability
+    "SIM103", # truthy short-circuit - same reason
     "SIM110", # any() rewrite suggestion is sometimes worse for clarity
-    "SIM117", # nested-with collapse — readability call
+    "SIM117", # nested-with collapse - readability call
 ]
 
 [tool.ruff.lint.per-file-ignores]

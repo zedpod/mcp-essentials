@@ -13,7 +13,7 @@ def _fmt_duration(minutes: int | None) -> str:
 
 def _fmt_price(value: float | None, currency: str | None) -> str:
     if value is None:
-        return "—"
+        return "-"
     return f"{value:.0f} {currency or ''}".strip()
 
 

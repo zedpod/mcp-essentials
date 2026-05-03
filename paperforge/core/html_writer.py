@@ -1,10 +1,10 @@
-"""HTML rendering — minimal, dependency-free; produces a clean readable page."""
+"""HTML rendering - minimal, dependency-free; produces a clean readable page."""
 
 import html
 
 
 def _escape_block(md: str) -> str:
-    """Very small markdown→HTML — handles headings, bullet lists, paragraphs, and bold/italic.
+    """Very small markdown→HTML - handles headings, bullet lists, paragraphs, and bold/italic.
 
     For full-featured rendering, install `markdown` and use `_with_markdown_lib` below.
     """

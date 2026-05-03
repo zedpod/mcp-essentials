@@ -1,4 +1,4 @@
-"""sitepulse.core — pure logic."""
+"""sitepulse.core - pure logic."""
 
 from .checks import inspect
 from .domain import normalize_host, registered_domain

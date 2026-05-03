@@ -100,7 +100,7 @@ def test_owui_and_core_outputs_agree(bundled_module) -> None:
         language="en",
     )
     core_out = to_markdown(core_result, lang="en")
-    # Strip the base64 blob, which is deterministic per payload but huge — compare structure.
+    # Strip the base64 blob, which is deterministic per payload but huge - compare structure.
     def strip_b64(s: str) -> str:
         import re
 

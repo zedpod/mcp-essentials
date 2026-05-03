@@ -1,4 +1,4 @@
-"""PDF rendering — HTML → PDF via weasyprint when available."""
+"""PDF rendering - HTML → PDF via weasyprint when available."""
 
 from pathlib import Path
 

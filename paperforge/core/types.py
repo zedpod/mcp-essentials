@@ -50,7 +50,7 @@ class Section(BaseModel):
 
 
 class Decision(BaseModel):
-    """An explicit decision worth preserving — what was chosen, why, what was rejected."""
+    """An explicit decision worth preserving - what was chosen, why, what was rejected."""
 
     title: str
     chose: str = Field(description="The choice that was made.")
@@ -77,5 +77,5 @@ class DocumentArtifact(BaseModel):
     open_questions_count: int
     next_steps_count: int
     preview_md: str = Field(
-        description="Always the markdown rendition, regardless of file format — for inspection."
+        description="Always the markdown rendition, regardless of file format - for inspection."
     )

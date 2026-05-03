@@ -1,6 +1,6 @@
 # mcp-essentials
 
-> Practical, dual-mode AI tools — same code runs as Open WebUI Tools **and** as real MCP servers.
+> Practical, dual-mode AI tools - same code runs as Open WebUI Tools **and** as real MCP servers.
 > Open source by [Orzed](https://orzed.com).
 
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
@@ -11,8 +11,8 @@
 
 Plug them into your LLM. Two delivery modes from a single codebase:
 
-- **Open WebUI** — paste `<tool>/owui.py` into Admin → Tools, configure Valves, done.
-- **Claude Desktop / Cursor / Cline / Continue** — add a one-liner to `claude_desktop_config.json`. Each tool runs as `python -m <tool>` over MCP stdio.
+- **Open WebUI** - paste `<tool>/owui.py` into Admin → Tools, configure Valves, done.
+- **Claude Desktop / Cursor / Cline / Continue** - add a one-liner to `claude_desktop_config.json`. Each tool runs as `python -m <tool>` over MCP stdio.
 
 Every tool is i18n-aware (English default, Turkish included), returns structured `Result` objects to MCP clients and rendered markdown to OWUI, retries network calls with backoff, and ships with tests.
 
@@ -23,7 +23,7 @@ Every tool is i18n-aware (English default, Turkish included), returns structured
 ├── owui.py            ← paste THIS into Open WebUI Admin → Tools
 ├── server.py          ← FastMCP server definition (the MCP brain)
 ├── __main__.py        ← so `python -m <tool>` runs the MCP server
-├── core/              ← pure logic (the source of truth — all tools edit here)
+├── core/              ← pure logic (the source of truth - all tools edit here)
 ├── tests/             ← unit + smoke tests
 ├── _owui_meta.py      ← bundler input (don't edit unless you know what you're doing)
 ├── _owui_wrapper.py   ← bundler input
@@ -55,13 +55,15 @@ Every tool is i18n-aware (English default, Turkish included), returns structured
 
 ---
 
-## Quick start — Open WebUI
+## Quick start - Open WebUI
 
 1. In Open WebUI, go to **Admin Panel → Tools → "+ New tool"**.
 2. Open the tool's `owui.py` (e.g. [`./qrforge/owui.py`](./qrforge/owui.py)). Copy the entire file.
-3. Paste into the OWUI tool editor and click **Save**.
-4. Configure Valves (defaults are sensible — most users only set `DEFAULT_LANGUAGE` and `TIMEOUT_SECONDS`).
-5. In a chat, open the **Controls → Tools** panel and toggle the tool on for your model.
+3. Paste into the OWUI tool editor.
+4. **Description field**: the metadata block at the top of `owui.py` populates it automatically. If you want to override it, every tool's per-tool README (`<tool>/README.md`) ships a paste-ready text block under "Install - Open WebUI". Bilingual EN/TR call triggers already live inside the docstrings of `owui.py`, so plain-language calls in either language work without touching this field.
+5. Click **Save**.
+6. Configure Valves (defaults are sensible - most users only set `DEFAULT_LANGUAGE` and `TIMEOUT_SECONDS`).
+7. In a chat, open the **Controls → Tools** panel and toggle the tool on for your model.
 
 Example prompt once `qrforge` is enabled:
 
@@ -69,7 +71,7 @@ Example prompt once `qrforge` is enabled:
 
 ---
 
-## Quick start — Claude Desktop, Cursor, Cline, Continue
+## Quick start - Claude Desktop, Cursor, Cline, Continue
 
 Edit your MCP config:
 
@@ -156,7 +158,7 @@ Every refactor in this repo replaced one of those.
 
 ## License
 
-Apache 2.0 — see [LICENSE](LICENSE).
+Apache 2.0 - see [LICENSE](LICENSE).
 
 ---
 

@@ -1,4 +1,4 @@
-"""Markdown rendering for QrImage results — used by the OWUI wrapper."""
+"""Markdown rendering for QrImage results - used by the OWUI wrapper."""
 
 from .i18n import t
 from .types import QrImage, Result

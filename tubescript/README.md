@@ -11,11 +11,23 @@ Part of [mcp-essentials](../README.md).
 
 `format`: `text` / `srt` / `vtt` / `json`. `max_chars` truncates at the nearest word boundary.
 
-## Install — Open WebUI
+## Install - Open WebUI
 
-Paste [`./owui.py`](./owui.py) into Admin → Tools.
+1. Paste [`./owui.py`](./owui.py) into Admin → Tools.
+2. Description field (optional - docstrings already carry bilingual EN/TR triggers):
+   ```text
+   Fetch YouTube transcripts as text, SRT, VTT, or JSON. Auto-detects video ID from any URL variant.
 
-## Install — Claude Desktop / Cursor / Cline
+   Use when the user provides a YouTube URL and asks for:
+   - the transcript / captions / subtitles
+   - SRT or VTT export
+   - translating captions to another language
+
+   Do NOT use for: non-YouTube videos (Vimeo, TikTok, etc.), summarizing a video without raw captions, or audio-only podcasts.
+   ```
+3. Configure Valves (`DEFAULT_LANGUAGE`, `DEFAULT_PREFER_LANG`, `MAX_CHARS`).
+
+## Install - Claude Desktop / Cursor / Cline
 
 ```json
 {
@@ -41,7 +53,7 @@ Paste [`./owui.py`](./owui.py) into Admin → Tools.
 
 ## License
 
-Apache 2.0 — see [../LICENSE](../LICENSE). Note: scraping YouTube transcripts is governed by YouTube ToS; use at your own risk.
+Apache 2.0 - see [../LICENSE](../LICENSE). Note: scraping YouTube transcripts is governed by YouTube ToS; use at your own risk.
 
 ---
 

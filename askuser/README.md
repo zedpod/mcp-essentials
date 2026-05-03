@@ -6,17 +6,29 @@ Part of [mcp-essentials](../README.md).
 
 ## Modes
 
-- **`single`** — pick one option; clicking confirms instantly.
-- **`multi`** — pick zero or more options; explicit Confirm button (with optional `min_select`/`max_select`).
-- **`free_text`** — textarea only; user types anything.
+- **`single`** - pick one option; clicking confirms instantly.
+- **`multi`** - pick zero or more options; explicit Confirm button (with optional `min_select`/`max_select`).
+- **`free_text`** - textarea only; user types anything.
 
 The `allow_custom` flag adds a free-text input *alongside* options. Keyboard nav: `1`–`9` for first nine, arrows + Enter to select, `Esc` to skip, `Tab` cycles within the modal (focus trap). Search filter auto-shows for >10 options. `prefers-reduced-motion` honored. Mobile: full-screen sheet under 640px.
 
-## Install — Open WebUI
+## Install - Open WebUI
 
-Paste [`./owui.py`](./owui.py) into Admin → Tools. Configure the `ACCENT_COLOR` Valve if you want a different brand color (default Claude orange `#E8713A`).
+1. Paste [`./owui.py`](./owui.py) into Admin → Tools.
+2. Description field (the model decides when to fire this, not the user - keep the framing explicit):
+   ```text
+   Ask the user an interactive question (single-select, multi-select, or free text). The MODEL decides when to call this, not the user.
 
-## Install — Claude Desktop / Cursor / Cline
+   Use when the model needs to:
+   - pick between multiple equally valid approaches before continuing
+   - resolve an ambiguous request that would otherwise be guessed
+   - get a specific factual input (key choice, format preference) that's missing
+
+   Do NOT use for: trivial yes/no confirmations, displaying information (this asks, doesn't show), or questions whose answer is already in the conversation.
+   ```
+3. Configure the `ACCENT_COLOR` Valve if you want a different brand color (default `#E8713A`).
+
+## Install - Claude Desktop / Cursor / Cline
 
 ```json
 {
@@ -43,7 +55,7 @@ If the host has no display (headless server, `DISPLAY` unset on Linux), the tool
 
 ## Security
 
-- localhost binds only to `127.0.0.1` — never `0.0.0.0`.
+- localhost binds only to `127.0.0.1` - never `0.0.0.0`.
 - A fresh CSRF token is required on the `POST /answer` request via the `X-Token` header.
 - Server lifetime is bounded by `timeout_s` (≤ 1800 sec). State is in-memory only.
 

@@ -18,7 +18,7 @@ STRINGS: Final[dict[str, dict[str, str]]] = {
         "source.remote": "remote (api.qrserver.com)",
         "note.local": "Generated locally. Payload was not sent to any third party.",
         "note.remote": (
-            "Generated via remote service. The payload was sent to api.qrserver.com — "
+            "Generated via remote service. The payload was sent to api.qrserver.com - "
             "do not use remote rendering for sensitive data."
         ),
         "warning.remote_used": "Remote rendering was used.",
@@ -45,7 +45,7 @@ STRINGS: Final[dict[str, dict[str, str]]] = {
         ),
         "hint.try_lower_ec": "Try a lower error-correction level (L) or shorten the payload.",
         "hint.use_local_for_secrets": (
-            "Generate Wi-Fi/vCard QR codes locally only — install `qrcode[pil]`."
+            "Generate Wi-Fi/vCard QR codes locally only - install `qrcode[pil]`."
         ),
         "hint.url_scheme": "Add an explicit scheme such as https:// to the URL.",
     },
@@ -64,7 +64,7 @@ STRINGS: Final[dict[str, dict[str, str]]] = {
         "source.remote": "uzak (api.qrserver.com)",
         "note.local": "Yerelde üretildi. Veri üçüncü tarafa gönderilmedi.",
         "note.remote": (
-            "Uzak servis ile üretildi. Veri api.qrserver.com'a gönderildi — "
+            "Uzak servis ile üretildi. Veri api.qrserver.com'a gönderildi - "
             "hassas verilerde uzak üretim kullanmayın."
         ),
         "warning.remote_used": "Uzak üretim kullanıldı.",
@@ -91,7 +91,7 @@ STRINGS: Final[dict[str, dict[str, str]]] = {
         ),
         "hint.try_lower_ec": "Daha düşük hata düzeltme (L) deneyin veya veriyi kısaltın.",
         "hint.use_local_for_secrets": (
-            "Wi-Fi/vCard QR kodlarını yalnızca yerel üretim ile alın — `qrcode[pil]` kurun."
+            "Wi-Fi/vCard QR kodlarını yalnızca yerel üretim ile alın - `qrcode[pil]` kurun."
         ),
         "hint.url_scheme": "URL'e açık bir şema ekleyin (örneğin https://).",
     },

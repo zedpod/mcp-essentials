@@ -60,7 +60,7 @@ class TestInspect:
         assert r.error and r.error.code == "INVALID_INPUT"
 
     def test_dns_only_runs_just_dns(self):
-        # respx not mocked — DNS will fail to connect; we only assert that
+        # respx not mocked - DNS will fail to connect; we only assert that
         # the result envelope is shaped right and other checks were skipped.
         r = inspect("nope.invalid", checks=["dns"], timeout_seconds=0.5)
         assert r.ok

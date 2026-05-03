@@ -1,4 +1,4 @@
-"""pagesignal.core — page-audit logic."""
+"""pagesignal.core - page-audit logic."""
 
 from .audit import audit_page
 from .i18n import DEFAULT, SUPPORTED, normalize_lang, t

@@ -1,4 +1,4 @@
-"""Render the document to Markdown — the source format every other writer also uses.
+"""Render the document to Markdown - the source format every other writer also uses.
 
 The output includes YAML frontmatter so Obsidian (and other markdown editors)
 can index title, project, tags, date, and source.
@@ -19,7 +19,7 @@ def _yaml_frontmatter(
     language: str,
 ) -> str:
     lines = ["---"]
-    # YAML strings are conservative — quote anything containing special chars.
+    # YAML strings are conservative - quote anything containing special chars.
     def yq(s: str) -> str:
         if not s:
             return '""'
@@ -61,7 +61,7 @@ def _render_decisions(decisions: list[Decision], lang: str) -> str:
         return ""
     parts = [f"## {t('section.decisions', lang)}", ""]
     for d in decisions:
-        parts.append(f"### {d.title}" + (f" — _{d.when}_" if d.when else ""))
+        parts.append(f"### {d.title}" + (f" - _{d.when}_" if d.when else ""))
         parts.append("")
         parts.append(f"**{t('decision.chose', lang)}**: {d.chose}")
         parts.append("")
@@ -104,7 +104,7 @@ def render_markdown(
         YAML frontmatter
         # Title
         TL;DR (summary, plain prose)
-        ## Summary section heading is implicit — the summary sits right under the title
+        ## Summary section heading is implicit - the summary sits right under the title
         Body sections (each `Section` becomes ## with optional ###/#### children)
         ## Key decisions   (only if any)
         ## Open questions  (only if any)
@@ -121,7 +121,7 @@ def render_markdown(
         "",
     ]
 
-    # Body sections — flowing prose by design. Reader scans the H2s, drills into
+    # Body sections - flowing prose by design. Reader scans the H2s, drills into
     # H3/H4 if interested. Top-level Section -> H2.
     for section in sections:
         parts.append(_render_section(section, depth=0))

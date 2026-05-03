@@ -57,8 +57,8 @@ def _render_brief(brief: NewsBrief, lang: str) -> str:
 
 
 def _render_catalog(cat: SourceCatalog, lang: str) -> str:
-    parts = [f"# {t('title', lang)} — {t('label.sources', lang)}", ""]
+    parts = [f"# {t('title', lang)} - {t('label.sources', lang)}", ""]
     for src in cat.sources:
         suffix = f" · `{src.language}`" if src.language else ""
-        parts.append(f"- **{src.name}** — `{src.url}`{suffix}")
+        parts.append(f"- **{src.name}** - `{src.url}`{suffix}")
     return "\n".join(parts)

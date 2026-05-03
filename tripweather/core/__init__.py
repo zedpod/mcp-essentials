@@ -1,4 +1,4 @@
-"""tripweather.core — pure logic."""
+"""tripweather.core - pure logic."""
 
 from .forecast import forecast, forecast_by_query
 from .geocode import geocode

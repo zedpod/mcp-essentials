@@ -1,7 +1,7 @@
 """OWUI Tools wrapper for qrforge.
 
 This file is concatenated with core/ modules by tools/bundle_owui.py to
-produce owui/main.py — the single paste-portable file users drop into the
+produce owui/main.py - the single paste-portable file users drop into the
 Open WebUI Admin → Tools panel. Imports below resolve to symbols inlined
 from core/ in the bundled output.
 """

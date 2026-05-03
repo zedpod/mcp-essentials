@@ -1,4 +1,4 @@
-"""askuser.core — types and overlay/page builders."""
+"""askuser.core - types and overlay/page builders."""
 
 from .i18n import DEFAULT, SUPPORTED, normalize_lang, t
 from .overlay import build_localhost_html, build_overlay_js

@@ -1,4 +1,4 @@
-"""Unit tests for qrforge.core.qr — pure functions, no network, no file I/O."""
+"""Unit tests for qrforge.core.qr - pure functions, no network, no file I/O."""
 
 from __future__ import annotations
 

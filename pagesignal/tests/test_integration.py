@@ -1,4 +1,4 @@
-"""Live integration tests for pagesignal — gated by RUN_LIVE=1."""
+"""Live integration tests for pagesignal - gated by RUN_LIVE=1."""
 
 import pytest
 

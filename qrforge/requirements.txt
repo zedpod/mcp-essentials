@@ -3,5 +3,5 @@ pydantic>=2.5
 mcp>=1.2
 
 # Optional: enables local QR rendering. Without it, text/URL payloads can opt
-# into a remote fallback (Wi-Fi/vCard cannot — see AGENTS.md).
+# into a remote fallback (Wi-Fi/vCard cannot - see AGENTS.md).
 qrcode[pil]>=7.4

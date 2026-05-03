@@ -30,7 +30,7 @@ def _render_geocode(g: GeocodeResult, lang: str) -> str:
     for i, c in enumerate(g.candidates, start=1):
         admin = ", ".join(x for x in (c.admin1, c.country) if x)
         parts.append(
-            f"{i}. **{c.name}** — {admin or c.country_code or ''}  "
+            f"{i}. **{c.name}** - {admin or c.country_code or ''}  "
             f"`({c.latitude:.4f}, {c.longitude:.4f})`"
             + (f" · {t('label.population', lang)}: {c.population:,}" if c.population else "")
             + (f" · {t('label.timezone', lang)}: `{c.timezone}`" if c.timezone else "")
@@ -73,11 +73,11 @@ def _render_forecast(f: ForecastResult, lang: str) -> str:
             f"{d.precipitation:.1f}"
             + (f" ({d.precipitation_probability}%)" if d.precipitation_probability is not None else "")
             if d.precipitation is not None
-            else "—"
+            else "-"
         )
-        wind = f"{d.wind_speed:.0f}" if d.wind_speed is not None else "—"
+        wind = f"{d.wind_speed:.0f}" if d.wind_speed is not None else "-"
         parts.append(
-            f"| `{d.date.isoformat()}` | {d.weather_label or '—'} | {temp} | {precip} | {wind} |"
+            f"| `{d.date.isoformat()}` | {d.weather_label or '-'} | {temp} | {precip} | {wind} |"
         )
 
     parts += ["", f"_{t('note.forecast', lang)}_"]

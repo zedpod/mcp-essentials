@@ -35,7 +35,7 @@ def _render_list(tl: TranscriptList, lang: str) -> str:
     for tr in tl.tracks:
         lines.append(
             f"| `{tr.language_code}` | {tr.language} | "
-            f"{'✓' if tr.is_generated else '—'} | {'✓' if tr.is_translatable else '—'} |"
+            f"{'✓' if tr.is_generated else '-'} | {'✓' if tr.is_translatable else '-'} |"
         )
     return "\n".join(lines)
 

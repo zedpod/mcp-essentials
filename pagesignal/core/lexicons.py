@@ -1,6 +1,6 @@
 """Multi-language question-word lexicons for GEO signal detection.
 
-Used by `audit.py` to mark a heading as "question-style" — these heading types
+Used by `audit.py` to mark a heading as "question-style" - these heading types
 correlate with content that AI engines tend to lift directly into answers.
 """
 

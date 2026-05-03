@@ -1,4 +1,4 @@
-"""qrforge.core — pure logic for QR code generation."""
+"""qrforge.core - pure logic for QR code generation."""
 
 from .i18n import DEFAULT, SUPPORTED, normalize_lang, t
 from .qr import qr_text, qr_url, qr_vcard, qr_wifi

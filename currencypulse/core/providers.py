@@ -1,10 +1,10 @@
 """FX provider implementations and dispatch.
 
 Provider chain (preferred order, first that supports the pair wins):
-    1. Frankfurter         — ECB-backed; ~30 fiat currencies including EUR/USD/GBP/TRY etc.
-    2. exchangerate.host   — wider coverage; free tier available
-    3. OpenExchangeRates   — paid; only used when CURRENCYPULSE_OXR_APP_ID env set
-    4. TCMB                — Turkish central bank; TRY-anchored only
+    1. Frankfurter         - ECB-backed; ~30 fiat currencies including EUR/USD/GBP/TRY etc.
+    2. exchangerate.host   - wider coverage; free tier available
+    3. OpenExchangeRates   - paid; only used when CURRENCYPULSE_OXR_APP_ID env set
+    4. TCMB                - Turkish central bank; TRY-anchored only
 
 Each provider exposes the same shape:
     - supports(base, quote, on_date) -> bool

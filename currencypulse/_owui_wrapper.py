@@ -1,4 +1,4 @@
-"""OWUI Tools wrapper for currencypulse — concatenated by tools/bundle_owui.py.
+"""OWUI Tools wrapper for currencypulse - concatenated by tools/bundle_owui.py.
 
 The wrapper avoids importing from `currencypulse.core` directly: when this file
 is concatenated into `owui.py`, the intra-package imports are stripped and the
@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 
 # Resolved at runtime to either the inlined core symbols (in the bundle) or via
 # this synthetic re-export when running from the package tree.
-from currencypulse.core import (  # noqa: F401 — kept for IDE/dev runs
+from currencypulse.core import (  # noqa: F401 - kept for IDE/dev runs
     convert,
     rate,
     snapshot,

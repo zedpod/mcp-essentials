@@ -54,7 +54,7 @@ class TestRate:
 
     @respx.mock
     def test_same_currency_returns_identity_no_network(self):
-        # No mocks needed — short-circuits before any HTTP.
+        # No mocks needed - short-circuits before any HTTP.
         r = rate("USD", "USD")
         assert r.ok
         assert r.data and r.data.value == 1.0

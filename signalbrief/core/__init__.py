@@ -1,4 +1,4 @@
-"""signalbrief.core — pure logic."""
+"""signalbrief.core - pure logic."""
 
 from .brief import collect, list_sources
 from .i18n import DEFAULT, SUPPORTED, normalize_lang, t

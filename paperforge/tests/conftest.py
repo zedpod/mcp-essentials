@@ -15,7 +15,7 @@ def tmp_output(tmp_path, monkeypatch) -> Path:
 @pytest.fixture
 def sample_payload():
     return {
-        "title": "mcp-essentials refactor — wave 4 wrap-up",
+        "title": "mcp-essentials refactor - wave 4 wrap-up",
         "summary": (
             "Nine MCP tools were rewritten to a flat dual-mode layout. "
             "Each tool now ships an OWUI bundle, a FastMCP server, shared core "
